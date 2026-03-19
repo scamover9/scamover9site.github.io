@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Sammy Campos Rivera — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+[data-theme="dark"] {
+  --bg:        #080c12;
+  --bg2:       #0d1219;
+  --bg3:       #111820;
+  --card:      #0f1620;
+  --card2:     #0c1520;
+  --border:    #1a2535;
+  --blue-mid:  #1e4d9b;
+  --blue-hi:   #2563c4;
+  --blue-glow: #3b82f6;
+  --text:      #e2e8f0;
+  --text-dim:  #7a8fa8;
+  --text-mid:  #a0b4cc;
+  --grid-line: rgba(26,58,110,0.07);
+  --img-bg:    #0a1018;
+  --img-border:#1a2535;
+  --scrim:     rgba(8,12,18,0.75);
+}
+[data-theme="light"] {
+  --bg:        #f3f5fa;
+  --bg2:       #ffffff;
+  --bg3:       #e8ecf5;
+  --card:      #ffffff;
+  --card2:     #f8faff;
+  --border:    #cdd5e8;
+  --blue-mid:  #2563c4;
+  --blue-hi:   #1a4d9b;
+  --blue-glow: #1e40af;
+  --text:      #0f172a;
+  --text-dim:  #4b5a70;
+  --text-mid:  #334155;
+  --grid-line: rgba(37,99,196,0.05);
+  --img-bg:    #e8ecf5;
+  --img-border:#cdd5e8;
+  --scrim:     rgba(243,245,250,0.85);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  min-height: 100vh; overflow-x: hidden;
+  transition: background 0.35s, color 0.35s;
+}
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px),
+                    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── TOPBAR (mobile) ── */
+.topbar {
+  display: none; position: fixed; top: 0; left: 0; right: 0; height: 52px;
+  background: var(--bg2); border-bottom: 1px solid var(--border);
+  align-items: center; justify-content: space-between;
+  padding: 0 1rem; z-index: 400;
+  transition: background 0.35s, border-color 0.35s;
+}
+.topbar-name { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--text); letter-spacing: 0.06em; }
+.topbar-right { display: flex; align-items: center; gap: 0.6rem; }
+.hamburger {
+  background: none; border: 1px solid var(--border); border-radius: 5px;
+  padding: 0.3rem 0.45rem; cursor: pointer; display: flex; flex-direction: column;
+  gap: 4px; transition: border-color 0.2s;
+}
+.hamburger:hover { border-color: var(--blue-glow); }
+.hamburger span { display: block; width: 18px; height: 1.5px; background: var(--text-mid); border-radius: 2px; transition: all 0.25s; }
+.hamburger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+
+/* ── THEME BUTTON ── */
+.theme-btn {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0.26rem 0.65rem 0.26rem 0.48rem;
+  display: flex; align-items: center; gap: 0.38rem; cursor: pointer;
+  font-family: 'Space Mono', monospace; font-size: 0.58rem;
+  color: var(--text-dim); letter-spacing: 0.06em;
+  transition: border-color 0.2s, background 0.35s, color 0.2s;
+}
+.theme-btn:hover { border-color: var(--blue-glow); color: var(--text); }
+.theme-btn svg { width: 11px; height: 11px; flex-shrink: 0; }
+/* desktop fixed position */
+.theme-btn-fixed { position: fixed; top: 1rem; right: 1.25rem; z-index: 300; }
+
+/* overlay */
+.nav-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+  z-index: 350; opacity: 0; transition: opacity 0.3s;
+}
+.nav-overlay.open { opacity: 1; }
+
+/* ── SIDE NAV ── */
+nav {
+  width: 230px; position: fixed; top: 0; left: 0; height: 100vh;
+  background: var(--bg2); border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; padding: 2.5rem 1.4rem;
+  z-index: 360; overflow-y: auto;
+  transition: background 0.35s, border-color 0.35s, transform 0.3s;
+}
+.nav-logo { font-family: 'Space Mono', monospace; font-size: 0.64rem; color: var(--blue-glow); margin-bottom: 0.18rem; letter-spacing: 0.1em; }
+.nav-name { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; line-height: 1.25; }
+.nav-sub  { font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--text-dim); margin-bottom: 2.25rem; letter-spacing: 0.05em; }
+.nav-links { display: flex; flex-direction: column; gap: 0.14rem; flex: 1; list-style: none; }
+.nav-links a {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding: 0.48rem 0.6rem; border-radius: 6px;
+  color: var(--text-dim); text-decoration: none;
+  font-size: 0.68rem; letter-spacing: 0.07em; text-transform: uppercase;
+  border: 1px solid transparent; transition: all 0.2s;
+}
+.nav-links a .ni { font-family: 'Space Mono', monospace; font-size: 0.56rem; width: 17px; color: var(--blue-mid); flex-shrink: 0; }
+.nav-links a:hover  { color: var(--text); background: rgba(37,99,196,0.08); border-color: var(--border); }
+.nav-links a.active { color: var(--blue-glow); background: rgba(37,99,196,0.1); border-color: rgba(59,130,246,0.22); }
+.nav-links a.active .ni { color: var(--blue-glow); }
+.nav-foot { display: flex; gap: 0.38rem; flex-wrap: wrap; padding-top: 1.2rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+.nav-foot a {
+  font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--text-dim);
+  text-decoration: none; padding: 0.26rem 0.48rem;
+  border: 1px solid var(--border); border-radius: 4px; transition: all 0.2s;
+}
+.nav-foot a:hover { color: var(--blue-glow); border-color: rgba(59,130,246,0.4); }
+
+/* ── PAGE LAYOUT ── */
+.page    { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+.content { margin-left: 230px; flex: 1; min-width: 0; }
+
+/* ── SECTION BASE ── */
+section { padding: 5rem 3.5rem; border-bottom: 1px solid var(--border); }
+.slabel {
+  font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.6rem;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.slabel::after { content: ''; flex: 1; max-width: 50px; height: 1px; background: var(--blue-mid); }
+.stitle { font-size: clamp(1.7rem, 3.5vw, 2.4rem); font-weight: 300; line-height: 1.1; margin-bottom: 2.5rem; letter-spacing: -0.01em; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
+#hero::before {
+  content: ''; position: absolute; top: -150px; right: -150px;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(37,99,196,0.09) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* hero split: left intro + right preview */
+.hero-body {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 3rem;
+  align-items: start;
+}
+.hero-left {}
+.h-pre  { font-family: 'Space Mono', monospace; font-size: 0.66rem; color: var(--blue-glow); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 0.9rem; animation: fu 0.5s 0.1s both; }
+.h-name { font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 300; line-height: 1.05; margin-bottom: 1.1rem; letter-spacing: -0.02em; animation: fu 0.5s 0.25s both; }
+.h-name span { color: var(--blue-glow); display: block; font-weight: 500; }
+.h-type { font-family: 'Space Mono', monospace; font-size: clamp(0.74rem, 1.2vw, 0.86rem); color: var(--text-mid); margin-bottom: 1.5rem; min-height: 1.5em; animation: fu 0.5s 0.4s both; }
+#ttext  { color: var(--blue-glow); }
+.cur    { display: inline-block; width: 2px; height: 1em; background: var(--blue-glow); margin-left: 2px; vertical-align: middle; animation: blink 1s infinite; }
+.h-bio  { max-width: 480px; font-size: 0.85rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 2rem; animation: fu 0.5s 0.55s both; }
+.h-ctas { display: flex; gap: 0.75rem; flex-wrap: wrap; animation: fu 0.5s 0.7s both; }
+
+/* hero right — cert + experience preview */
+.hero-right { animation: fu 0.5s 0.85s both; }
+
+.preview-block { margin-bottom: 1.25rem; }
+.preview-label {
+  font-family: 'Space Mono', monospace; font-size: 0.54rem;
+  color: var(--blue-glow); letter-spacing: 0.18em; text-transform: uppercase;
+  margin-bottom: 0.6rem; display: flex; align-items: center; gap: 0.5rem;
+}
+.preview-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* cert mini cards */
+.cert-mini-list { display: flex; flex-direction: column; gap: 0.45rem; }
+.cert-mini {
+  background: var(--card); border: 1px solid var(--border); border-radius: 7px;
+  padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;
+  transition: border-color 0.2s;
+}
+.cert-mini:hover { border-color: rgba(59,130,246,0.3); }
+.cert-mini-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blue-glow); flex-shrink: 0; box-shadow: 0 0 5px rgba(59,130,246,0.5); }
+.cert-mini-name { font-size: 0.78rem; font-weight: 500; color: var(--text); flex: 1; }
+.cert-mini-badge {
+  font-family: 'Space Mono', monospace; font-size: 0.52rem;
+  color: var(--blue-glow); background: rgba(37,99,196,0.1);
+  border: 1px solid rgba(59,130,246,0.18); border-radius: 3px;
+  padding: 0.14rem 0.38rem; letter-spacing: 0.06em; white-space: nowrap;
+}
+.cert-mini-badge.inprog { color: var(--text-dim); border-color: var(--border); background: transparent; }
+
+/* experience mini */
+.exp-mini-list { display: flex; flex-direction: column; gap: 0.45rem; }
+.exp-mini {
+  background: var(--card); border: 1px solid var(--border); border-radius: 7px;
+  padding: 0.65rem 0.85rem; transition: border-color 0.2s;
+}
+.exp-mini:hover { border-color: rgba(59,130,246,0.3); }
+.exp-mini-role { font-size: 0.78rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
+.exp-mini-co   { font-size: 0.7rem; color: var(--text-dim); }
+.exp-mini-date { font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--blue-glow); margin-top: 0.18rem; }
+
+/* buttons */
+.btn-p { padding: 0.6rem 1.35rem; background: var(--blue-mid); color: #fff; border: 1px solid var(--blue-hi); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-block; }
+.btn-p:hover { background: var(--blue-hi); box-shadow: 0 0 14px rgba(37,99,196,0.3); }
+.btn-g { padding: 0.6rem 1.35rem; background: transparent; color: var(--text-mid); border: 1px solid var(--border); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.64rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-block; }
+.btn-g:hover { border-color: var(--blue-mid); color: var(--text); }
+
+/* ── TIMELINE ── */
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--blue-mid), transparent); }
+.ti { position: relative; margin-bottom: 2.4rem; padding-left: 1.35rem; }
+.ti::before { content: ''; position: absolute; left: -2.3rem; top: 0.4rem; width: 8px; height: 8px; border-radius: 50%; background: var(--blue-glow); box-shadow: 0 0 6px rgba(59,130,246,0.45); }
+.ti-date { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow); letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+.ti-role { font-size: 0.95rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
+.ti-co   { font-size: 0.76rem; color: var(--text-mid); margin-bottom: 0.45rem; }
+.ti-desc { font-size: 0.76rem; line-height: 1.85; color: var(--text-dim); }
+.rbtn    { margin-top: 2rem; }
+
+/* ── CERTS ── */
+.cgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0.9rem; }
+.cc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.25rem; transition: all 0.2s; position: relative; overflow: hidden; }
+.cc::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--blue-mid); transition: background 0.2s; }
+.cc:hover { border-color: rgba(59,130,246,0.28); transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+.cc:hover::before { background: var(--blue-glow); }
+.cbadge  { font-family: 'Space Mono', monospace; font-size: 0.52rem; padding: 0.16rem 0.44rem; border-radius: 4px; background: rgba(37,99,196,0.1); color: var(--blue-glow); border: 1px solid rgba(59,130,246,0.18); display: inline-block; margin-bottom: 0.5rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.cname   { font-size: 0.88rem; font-weight: 500; color: var(--text); margin-bottom: 0.18rem; line-height: 1.3; }
+.cissuer { font-size: 0.72rem; color: var(--text-dim); margin-bottom: 0.28rem; }
+.cdate   { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--text-dim); }
+
+/* ── PROJECTS ── */
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+.pc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all 0.25s; display: flex; flex-direction: column; position: relative; }
+.pc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
+.pc:hover { border-color: rgba(59,130,246,0.28); box-shadow: 0 10px 26px rgba(0,0,0,0.1); }
+.pc:hover::after { transform: scaleX(1); }
+.pc-img { width: 100%; height: 175px; background: var(--img-bg); border-bottom: 1px solid var(--img-border); overflow: hidden; position: relative; flex-shrink: 0; }
+.pc-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
+.pc:hover .pc-img img { transform: scale(1.04); }
+.pc-img-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; height: 100%; font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim); letter-spacing: 0.08em; }
+.pc-img-placeholder svg { width: 22px; height: 22px; stroke: var(--blue-glow); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.4; }
+.pc-img-label { position: absolute; bottom: 0.48rem; right: 0.55rem; font-family: 'Space Mono', monospace; font-size: 0.52rem; color: var(--blue-glow); background: var(--scrim); padding: 0.14rem 0.4rem; border-radius: 3px; }
+.pc-body { padding: 1.3rem; flex: 1; display: flex; flex-direction: column; }
+.pnum  { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-mid); letter-spacing: 0.15em; margin-bottom: 0.45rem; }
+.pname { font-size: 0.93rem; font-weight: 500; color: var(--text); margin-bottom: 0.45rem; line-height: 1.2; }
+.pdesc { font-size: 0.76rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 0.85rem; flex: 1; }
+.ptags { display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 0.85rem; }
+.tag   { font-family: 'Space Mono', monospace; font-size: 0.52rem; padding: 0.16rem 0.44rem; border-radius: 4px; background: rgba(37,99,196,0.08); color: var(--text-mid); border: 1px solid var(--border); }
+.plink { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow); text-decoration: none; border: 1px solid rgba(59,130,246,0.28); padding: 0.28rem 0.6rem; border-radius: 4px; transition: all 0.2s; align-self: flex-start; }
+.plink:hover { background: rgba(37,99,196,0.12); border-color: var(--blue-glow); }
+
+/* ── SKILLS ── */
+.sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 0.6rem 2.75rem; }
+.scat  { font-family: 'Space Mono', monospace; font-size: 0.52rem; color: var(--blue-glow); letter-spacing: 0.2em; text-transform: uppercase; margin: 1.4rem 0 0.55rem; padding-bottom: 0.38rem; border-bottom: 1px solid var(--border); grid-column: 1 / -1; }
+.ski   { margin-bottom: 0.6rem; }
+.skh   { display: flex; justify-content: space-between; margin-bottom: 0.32rem; }
+.skn   { font-size: 0.72rem; color: var(--text-mid); }
+.skp   { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow); }
+.skbar { height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.skfill { height: 100%; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); border-radius: 2px; width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+/* ── CONTACT ── */
+#contact { border-bottom: none; }
+.cgr2  { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+.clead { font-size: 0.85rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 1.6rem; }
+.clinks { display: flex; flex-direction: column; gap: 0.5rem; }
+.clink  { display: flex; align-items: center; gap: 0.85rem; padding: 0.75rem 0.9rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-mid); font-size: 0.76rem; transition: all 0.2s; }
+.clink:hover { border-color: rgba(59,130,246,0.28); color: var(--text); background: rgba(37,99,196,0.06); }
+.cico  { font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--blue-glow); width: 52px; flex-shrink: 0; }
+
+/* ── ANIMATIONS ── */
+@keyframes fu    { from { opacity:0; transform: translateY(16px); } to { opacity:1; transform: none; } }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+.fade-item { opacity: 0; transform: translateY(14px); transition: opacity 0.55s ease, transform 0.55s ease; }
+.fade-item.in { opacity: 1; transform: none; }
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--blue-mid); border-radius: 2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 960px) {
+  .hero-body { grid-template-columns: 1fr; gap: 2.5rem; }
+  .hero-right { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .preview-block { margin-bottom: 0; }
+}
+
+@media (max-width: 768px) {
+  /* show topbar, hide desktop toggle */
+  .topbar { display: flex; }
+  .theme-btn-fixed { display: none; }
+  /* nav slides in */
+  nav { top: 52px; height: calc(100vh - 52px); transform: translateX(-100%); padding-top: 1.75rem; }
+  nav.open { transform: translateX(0); }
+  .nav-overlay { display: block; top: 52px; }
+  /* content no margin, offset for topbar */
+  .content { margin-left: 0; padding-top: 52px; }
+  section { padding: 3.25rem 1.35rem; }
+  #hero { min-height: auto; padding-top: 3.5rem; padding-bottom: 3.5rem; }
+  .hero-right { grid-template-columns: 1fr; }
+  .cgr2 { grid-template-columns: 1fr; gap: 2rem; }
+  .pgrid { grid-template-columns: 1fr; }
+  .h-stats { gap: 1.25rem; }
+  .h-ctas { flex-direction: column; }
+  .btn-p, .btn-g { text-align: center; }
+}
+
+@media (max-width: 480px) {
+  section { padding: 3rem 1.1rem; }
+  .stitle { margin-bottom: 2rem; }
+  .cgrid  { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- apply saved theme before paint -->
+<script>
+(function(){
+  var t = localStorage.getItem('scamover-theme') || 'dark';
+  document.documentElement.dataset.theme = t;
+})();
+</script>
+
+<!-- DESKTOP THEME BTN -->
+<button class="theme-btn theme-btn-fixed" id="themeBtnDesktop" aria-label="Toggle theme">
+  <svg id="iconD" viewBox="0 0 24 24" fill="none" stroke="var(--blue-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
+    <path id="pathD" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+  </svg>
+  <span id="labelD">Light</span>
+</button>
+
+<!-- MOBILE TOPBAR -->
+<div class="topbar">
+  <span class="topbar-name">scamover9.com</span>
+  <div class="topbar-right">
+    <button class="theme-btn" id="themeBtnMobile" aria-label="Toggle theme">
+      <svg id="iconM" viewBox="0 0 24 24" fill="none" stroke="var(--blue-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="11" height="11">
+        <path id="pathM" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
+      </svg>
+      <span id="labelM">Light</span>
+    </button>
+    <button class="hamburger" id="hamburger" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</div>
+
+<!-- NAV OVERLAY -->
+<div class="nav-overlay" id="navOverlay"></div>
+
+<div class="page">
+
+<!-- SIDE NAV -->
+<nav id="sidenav">
+  <div class="nav-logo">// portfolio</div>
+  <div class="nav-name">Sammy Campos Rivera</div>
+  <div class="nav-sub">Cybersecurity &amp; Cloud</div>
+  <ul class="nav-links">
+    <li><a href="#hero"       class="active"><span class="ni">01</span> Home</a></li>
+    <li><a href="#experience">              <span class="ni">02</span> Experience</a></li>
+    <li><a href="#certs">                   <span class="ni">03</span> Certs &amp; Edu</a></li>
+    <li><a href="#projects">                <span class="ni">04</span> Projects</a></li>
+    <li><a href="#skills">                  <span class="ni">05</span> Skills</a></li>
+    <li><a href="#contact">                 <span class="ni">06</span> Contact</a></li>
+  </ul>
+  <div class="nav-foot">
+    <a href="https://linkedin.com/in/scamover9" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/labscamover9"   target="_blank" rel="noopener">GitHub</a>
+    <a href="https://labscamover9.com"          target="_blank" rel="noopener">Homelab ↗</a>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="content">
+
+<!-- ══ HERO ══ -->
+<section id="hero">
+  <div class="hero-body">
+
+    <!-- LEFT: intro -->
+    <div class="hero-left">
+      <div class="h-pre">Available for opportunities · DFW Area</div>
+      <h1 class="h-name">Sammy<span>Campos Rivera</span></h1>
+      <div class="h-type"><span id="ttext"></span><span class="cur"></span></div>
+      <p class="h-bio">Cybersecurity student and CompTIA A+ certified technician based in the Dallas–Fort Worth area. I build and maintain self-hosted infrastructure, pursue security certifications, and bring hands-on experience from IT support, broadcast production, and systems administration.</p>
+      <div class="h-ctas">
+        <a href="#projects" class="btn-p">View Projects</a>
+        <a href="resume.pdf" download class="btn-g">Resume PDF</a>
+        <a href="https://labscamover9.com" target="_blank" rel="noopener" class="btn-g">Homelab ↗</a>
+      </div>
+    </div>
+
+    <!-- RIGHT: cert + experience previews -->
+    <div class="hero-right">
+
+      <div class="preview-block">
+        <div class="preview-label">Certifications</div>
+        <div class="cert-mini-list">
+          <div class="cert-mini">
+            <div class="cert-mini-dot"></div>
+            <span class="cert-mini-name">CompTIA A+</span>
+            <span class="cert-mini-badge">Active</span>
+          </div>
+          <div class="cert-mini">
+            <div class="cert-mini-dot"></div>
+            <span class="cert-mini-name">CompTIA Security+</span>
+            <span class="cert-mini-badge inprog">In Progress</span>
+          </div>
+          <div class="cert-mini">
+            <div class="cert-mini-dot"></div>
+            <span class="cert-mini-name">MOS Associate</span>
+            <span class="cert-mini-badge">Microsoft</span>
+          </div>
+          <div class="cert-mini">
+            <div class="cert-mini-dot"></div>
+            <span class="cert-mini-name">Cybersecurity L1</span>
+            <span class="cert-mini-badge">TSTC</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="preview-block">
+        <div class="preview-label">Experience</div>
+        <div class="exp-mini-list">
+          <div class="exp-mini">
+            <div class="exp-mini-role">Substitute Teacher</div>
+            <div class="exp-mini-co">Ferris High School</div>
+            <div class="exp-mini-date">Nov 2025 — Present</div>
+          </div>
+          <div class="exp-mini">
+            <div class="exp-mini-role">Help Desk Technician</div>
+            <div class="exp-mini-co">Luis's Mexican Food &amp; Grill</div>
+            <div class="exp-mini-date">May 2024 — Aug 2025</div>
+          </div>
+          <div class="exp-mini">
+            <div class="exp-mini-role">IT Support / Team Lead</div>
+            <div class="exp-mini-co">Bugeyemedia @ Ferris HS</div>
+            <div class="exp-mini-date">Aug 2020 — Apr 2024</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXPERIENCE ══ -->
+<section id="experience">
+  <div class="slabel">02 — Work History</div>
+  <h2 class="stitle">Experience</h2>
+  <div class="timeline">
+    <div class="ti fade-item">
+      <div class="ti-date">Nov 2025 — Present</div>
+      <div class="ti-role">Substitute Teacher</div>
+      <div class="ti-co">Ferris High School · Ferris, TX</div>
+      <div class="ti-desc">Supporting classroom instruction while continuing to pursue cybersecurity and cloud computing certifications full time.</div>
+    </div>
+    <div class="ti fade-item">
+      <div class="ti-date">May 2024 — Aug 2025</div>
+      <div class="ti-role">Help Desk Technician</div>
+      <div class="ti-co">Luis's Mexican Food &amp; Grill · Garland, TX</div>
+      <div class="ti-desc">Sole IT resource for all technical operations — managed POS terminals, network access points, computers, televisions, and landline phones. Resolved hardware and software issues independently with no escalation path.</div>
+    </div>
+    <div class="ti fade-item">
+      <div class="ti-date">Aug 2022 — Apr 2024</div>
+      <div class="ti-role">Computer Equipment Manager</div>
+      <div class="ti-co">Bricktown Gaming @ Ferris High School · Ferris, TX</div>
+      <div class="ti-desc">Provided technical support, resolved user issues, and performed routine equipment maintenance to ensure optimal performance and longevity.</div>
+    </div>
+    <div class="ti fade-item">
+      <div class="ti-date">Aug 2020 — Apr 2024</div>
+      <div class="ti-role">IT Support / Team Lead</div>
+      <div class="ti-co">Bugeyemedia @ Ferris High School · Ferris, TX</div>
+      <div class="ti-desc">Led a 16-person cross-departmental team producing live sports broadcasts, pre-recorded content, and live shows with 5–7 on-air anchors. Responsible for all computer, camera, and audio equipment installation, updates, and real-time troubleshooting.</div>
+    </div>
+  </div>
+  <div class="rbtn">
+    <a href="resume.pdf" download class="btn-p">Download Full Resume (PDF)</a>
+  </div>
+</section>
+
+<!-- ══ CERTS & EDUCATION ══ -->
+<section id="certs">
+  <div class="slabel">03 — Credentials</div>
+  <h2 class="stitle">Certifications &amp; Education</h2>
+  <div class="cgrid">
+    <div class="cc fade-item"><div class="cbadge">Active · Expires Feb 2029</div><div class="cname">CompTIA A+</div><div class="cissuer">CompTIA — Plus Series</div><div class="cdate">Issued Feb 18, 2026 · ID: COMP001022966609</div></div>
+    <div class="cc fade-item"><div class="cbadge">In Progress</div><div class="cname">CompTIA Security+</div><div class="cissuer">CompTIA</div><div class="cdate">Target 2026</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certification</div><div class="cname">Microsoft Office Specialist: Associate</div><div class="cissuer">Microsoft — Office 365 &amp; 2019</div><div class="cdate">Verified</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certification</div><div class="cname">Foundations of Project Management</div><div class="cissuer">Google / Coursera</div><div class="cdate">Completed</div></div>
+    <div class="cc fade-item"><div class="cbadge">2024</div><div class="cname">Cloud Computing</div><div class="cissuer">Dallas College</div><div class="cdate">August 2024</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certificate · 2024</div><div class="cname">Cybersecurity — Level 1</div><div class="cissuer">Texas State Technical College</div><div class="cdate">Aug 2022 — Mar 2024</div></div>
+    <div class="cc fade-item"><div class="cbadge">Diploma · 2024</div><div class="cname">High School Diploma</div><div class="cissuer">Ferris High School</div><div class="cdate">Aug 2020 — May 2024</div></div>
+  </div>
+</section>
+
+<!-- ══ PROJECTS ══ -->
+<section id="projects">
+  <div class="slabel">04 — Built Things</div>
+  <h2 class="stitle">Projects</h2>
+  <div class="pgrid">
+
+    <div class="pc fade-item">
+      <div class="pc-img">
+        <img src="proxmox.png" alt="Proxmox cluster" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="pc-img-placeholder" style="display:none">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          proxmox.png
+        </div>
+        <div class="pc-img-label">proxmox.png</div>
+      </div>
+      <div class="pc-body">
+        <div class="pnum">// 01</div>
+        <div class="pname">Self-Hosted Homelab</div>
+        <div class="pdesc">3-node Proxmox cluster with TrueNAS RAIDZ1 storage, Docker-based services, and layered security using Cloudflare WAF, Tailscale, and WireGuard VPN. Hosts 10+ self-managed services including media, photo management, documentation, and home automation.</div>
+        <div class="ptags"><span class="tag">Proxmox</span><span class="tag">TrueNAS</span><span class="tag">Docker</span><span class="tag">Tailscale</span><span class="tag">Cloudflare</span><span class="tag">Linux</span></div>
+        <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
+      </div>
+    </div>
+
+    <div class="pc fade-item">
+      <div class="pc-img">
+        <img src="grafana.png" alt="Grafana dashboard" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <div class="pc-img-placeholder" style="display:none">
+          <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          grafana.png
+        </div>
+        <div class="pc-img-label">grafana.png</div>
+      </div>
+      <div class="pc-body">
+        <div class="pnum">// 02</div>
+        <div class="pname">Infrastructure Monitoring Stack</div>
+        <div class="pdesc">Full observability stack using Prometheus for metrics scraping across all Proxmox nodes and VMs, feeding Grafana dashboards for real-time CPU, memory, disk, and network visualization. Uptime Kuma tracks all hosted services with alerting.</div>
+        <div class="ptags"><span class="tag">Grafana</span><span class="tag">Prometheus</span><span class="tag">Uptime Kuma</span><span class="tag">Node Exporter</span></div>
+        <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
+      </div>
+    </div>
+
+    <div class="pc fade-item">
+      <div class="pc-body" style="padding-top:1.5rem">
+        <div class="pnum">// 03</div>
+        <div class="pname">Bugeyemedia Broadcast Infrastructure</div>
+        <div class="pdesc">Built and managed complete AV and IT infrastructure for live high school sports broadcasts. Led a 16-person cross-departmental team producing live shows, video editing pipelines, and pre-recorded content over a 4-year run.</div>
+        <div class="ptags"><span class="tag">AV Systems</span><span class="tag">Team Lead</span><span class="tag">Live Broadcast</span><span class="tag">Video Editing</span></div>
+      </div>
+    </div>
+
+    <div class="pc fade-item">
+      <div class="pc-body" style="padding-top:1.5rem">
+        <div class="pnum">// 04</div>
+        <div class="pname">Portfolio &amp; Resume Website</div>
+        <div class="pdesc">This portfolio hosted on GitHub Pages. Light/dark theme toggle, animated typing hero, scroll-triggered animations, downloadable PDF resume. Built with vanilla HTML, CSS, and JavaScript — no frameworks.</div>
+        <div class="ptags"><span class="tag">HTML/CSS</span><span class="tag">JavaScript</span><span class="tag">GitHub Pages</span><span class="tag">Responsive</span></div>
+        <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">labscamover9.com ↗</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══ SKILLS ══ -->
+<section id="skills">
+  <div class="slabel">05 — Capabilities</div>
+  <h2 class="stitle">Skills</h2>
+  <div class="sgrid">
+    <div class="scat">Infrastructure &amp; Virtualization</div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Proxmox VE</span><span class="skp">85%</span></div><div class="skbar"><div class="skfill" data-w="85"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">TrueNAS / Storage</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Docker / Containers</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Linux (Debian / RHEL)</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+    <div class="scat">Networking &amp; Security</div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Networking &amp; DNS</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Cloudflare / WAF</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">WireGuard / Tailscale</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Cybersecurity Fundamentals</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="scat">Monitoring &amp; Web</div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Grafana / Prometheus</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">HTML / CSS / JavaScript</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">IT Hardware Support</span><span class="skp">90%</span></div><div class="skbar"><div class="skfill" data-w="90"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">System Configuration</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+  </div>
+</section>
+
+<!-- ══ CONTACT ══ -->
+<section id="contact">
+  <div class="slabel">06 — Get In Touch</div>
+  <h2 class="stitle">Contact</h2>
+  <div class="cgr2">
+    <div class="fade-item">
+      <p class="clead">Currently open to IT, cybersecurity, and systems administration opportunities in the DFW area. Whether you have a role, a question, or just want to talk tech — reach out.</p>
+      <a href="mailto:scamposrivera@icloud.com" class="btn-p">Send an Email</a>
+    </div>
+    <div class="clinks fade-item">
+      <a href="mailto:scamposrivera@icloud.com" class="clink"><span class="cico">EMAIL</span>scamposrivera@icloud.com</a>
+      <a href="https://linkedin.com/in/scamover9" target="_blank" rel="noopener" class="clink"><span class="cico">LINKEDIN</span>linkedin.com/in/scamover9</a>
+      <a href="https://labscamover9.com" target="_blank" rel="noopener" class="clink"><span class="cico">HOMELAB</span>labscamover9.com</a>
+      <a href="tel:4693169307" class="clink"><span class="cico">PHONE</span>(469) 316-9307</a>
+    </div>
+  </div>
+</section>
+
+</div><!-- end .content -->
+</div><!-- end .page -->
+
+<script>
+var MOON = 'M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z';
+var SUN  = 'M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z';
+
+function applyTheme(t) {
+  document.documentElement.dataset.theme = t;
+  localStorage.setItem('scamover-theme', t);
+  var pairs = [['pathD','labelD'],['pathM','labelM']];
+  pairs.forEach(function(p) {
+    var path  = document.getElementById(p[0]);
+    var label = document.getElementById(p[1]);
+    if (path)  path.setAttribute('d', t === 'dark' ? MOON : SUN);
+    if (label) label.textContent = t === 'dark' ? 'Light' : 'Dark';
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  // init theme
+  applyTheme(localStorage.getItem('scamover-theme') || 'dark');
+
+  // toggle buttons
+  ['themeBtnDesktop','themeBtnMobile'].forEach(function(id) {
+    var btn = document.getElementById(id);
+    if (btn) btn.addEventListener('click', function() {
+      applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  });
+
+  // hamburger
+  var burger  = document.getElementById('hamburger');
+  var sidenav = document.getElementById('sidenav');
+  var overlay = document.getElementById('navOverlay');
+
+  function setNav(open) {
+    sidenav.classList.toggle('open', open);
+    overlay.classList.toggle('open', open);
+    burger.classList.toggle('open', open);
+    document.body.style.overflow = open ? 'hidden' : '';
+  }
+  if (burger) {
+    burger.addEventListener('click', function() { setNav(!sidenav.classList.contains('open')); });
+  }
+  if (overlay) {
+    overlay.addEventListener('click', function() { setNav(false); });
+  }
+  document.querySelectorAll('.nav-links a').forEach(function(a) {
+    a.addEventListener('click', function() { if (window.innerWidth <= 768) setNav(false); });
+  });
+
+  // typed
+  var roles = ['CompTIA A+ Certified','Cybersecurity Student','Homelab Engineer','Linux Sysadmin','Security+ In Progress'];
+  var ri = 0, ci = 0, del = false;
+  var el = document.getElementById('ttext');
+  function type() {
+    if (!el) return;
+    var w = roles[ri];
+    if (!del) {
+      el.textContent = w.slice(0, ++ci);
+      if (ci === w.length) { del = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = w.slice(0, --ci);
+      if (ci === 0) { del = false; ri = (ri + 1) % roles.length; }
+    }
+    setTimeout(type, del ? 45 : 80);
+  }
+  type();
+
+  // scroll reveal + skill bars
+  var items = document.querySelectorAll('.fade-item');
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          e.target.querySelectorAll('.skfill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -30px 0px' });
+    items.forEach(function(i) { obs.observe(i); });
+  } else {
+    items.forEach(function(i) {
+      i.classList.add('in');
+      i.querySelectorAll('.skfill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
+    });
+  }
+
+  // active nav
+  var secs = document.querySelectorAll('section[id]');
+  var nls  = document.querySelectorAll('.nav-links a');
+  if ('IntersectionObserver' in window) {
+    secs.forEach(function(s) {
+      new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            nls.forEach(function(a) { a.classList.remove('active'); });
+            var l = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
+            if (l) l.classList.add('active');
+          }
+        });
+      }, { threshold: 0.35 }).observe(s);
+    });
+  }
+
+});
+</script>
+</body>
+</html>
