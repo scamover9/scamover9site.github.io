@@ -7,13 +7,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
+/* ── THEMES ── */
 [data-theme="dark"] {
   --bg:        #080c12;
   --bg2:       #0d1219;
   --bg3:       #111820;
   --card:      #0f1620;
   --border:    #1a2535;
-  --blue:      #1a3a6e;
   --blue-mid:  #1e4d9b;
   --blue-hi:   #2563c4;
   --blue-glow: #3b82f6;
@@ -23,7 +23,8 @@
   --grid-line: rgba(26,58,110,0.07);
   --img-bg:    #0a1018;
   --img-border:#1a2535;
-  --scrim:     rgba(8,12,18,0.72);
+  --scrim:     rgba(8,12,18,0.75);
+  --toggle-bg: #0d1219;
 }
 [data-theme="light"] {
   --bg:        #f3f5fa;
@@ -31,7 +32,6 @@
   --bg3:       #e8ecf5;
   --card:      #ffffff;
   --border:    #cdd5e8;
-  --blue:      #bdd0f0;
   --blue-mid:  #2563c4;
   --blue-hi:   #1a4d9b;
   --blue-glow: #1e40af;
@@ -41,239 +41,239 @@
   --grid-line: rgba(37,99,196,0.05);
   --img-bg:    #e8ecf5;
   --img-border:#cdd5e8;
-  --scrim:     rgba(243,245,250,0.82);
+  --scrim:     rgba(243,245,250,0.85);
+  --toggle-bg: #ffffff;
 }
+
+/* ── RESET ── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
 body {
   background: var(--bg); color: var(--text);
   font-family: 'DM Sans', sans-serif;
-  display: flex; min-height: 100vh; overflow-x: hidden;
+  min-height: 100vh; overflow-x: hidden;
   transition: background 0.35s, color 0.35s;
 }
 body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(var(--grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
   background-size: 40px 40px;
-  pointer-events: none; z-index: 0;
 }
- 
-/* THEME TOGGLE */
-.theme-toggle {
-  position: fixed; top: 1.1rem; right: 1.4rem; z-index: 200;
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 999px; padding: 0.3rem 0.7rem 0.3rem 0.55rem;
-  display: flex; align-items: center; gap: 0.45rem;
-  cursor: pointer; transition: border-color 0.2s, background 0.35s;
-  font-family: 'Space Mono', monospace; font-size: 0.6rem;
-  color: var(--text-dim); letter-spacing: 0.06em; outline: none;
+
+/* ── LAYOUT ── */
+.page { display: flex; min-height: 100vh; position: relative; z-index: 1; }
+.content { margin-left: 240px; flex: 1; }
+
+/* ── THEME TOGGLE ── */
+.theme-btn {
+  position: fixed; top: 1rem; right: 1.25rem; z-index: 300;
+  background: var(--toggle-bg); border: 1px solid var(--border);
+  border-radius: 999px; padding: 0.28rem 0.7rem 0.28rem 0.5rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  cursor: pointer; font-family: 'Space Mono', monospace;
+  font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.06em;
+  transition: border-color 0.2s, background 0.35s, color 0.2s;
 }
-.theme-toggle:hover { border-color: var(--blue-glow); color: var(--text); }
-.theme-toggle svg { width: 12px; height: 12px; flex-shrink: 0; stroke: var(--blue-glow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
- 
-/* NAV */
-:root { --nav-w: 240px; }
+.theme-btn:hover { border-color: var(--blue-glow); color: var(--text); }
+.theme-btn svg { width: 12px; height: 12px; flex-shrink: 0; transition: all 0.2s; }
+
+/* ── SIDE NAV ── */
 nav {
-  position: fixed; top: 0; left: 0;
-  width: var(--nav-w); height: 100vh;
+  width: 240px; position: fixed; top: 0; left: 0; height: 100vh;
   background: var(--bg2); border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  padding: 2.5rem 1.5rem; z-index: 100;
+  display: flex; flex-direction: column; padding: 2.5rem 1.5rem;
+  z-index: 200; overflow-y: auto;
   transition: background 0.35s, border-color 0.35s;
 }
-.nav-logo  { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--blue-glow); margin-bottom: 0.2rem; letter-spacing: 0.1em; }
-.nav-name  { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.15rem; line-height: 1.25; }
-.nav-title { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim); margin-bottom: 2.5rem; letter-spacing: 0.05em; }
-.nav-links { display: flex; flex-direction: column; gap: 0.18rem; flex: 1; }
+.nav-logo  { font-family: 'Space Mono', monospace; font-size: 0.65rem; color: var(--blue-glow); margin-bottom: 0.2rem; letter-spacing: 0.1em; }
+.nav-name  { font-size: 0.98rem; font-weight: 500; color: var(--text); margin-bottom: 0.12rem; line-height: 1.25; }
+.nav-sub   { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--text-dim); margin-bottom: 2.5rem; letter-spacing: 0.05em; }
+.nav-links { display: flex; flex-direction: column; gap: 0.15rem; flex: 1; list-style: none; }
 .nav-links a {
-  display: flex; align-items: center; gap: 0.7rem;
-  padding: 0.52rem 0.7rem; border-radius: 6px;
+  display: flex; align-items: center; gap: 0.65rem;
+  padding: 0.5rem 0.65rem; border-radius: 6px;
   color: var(--text-dim); text-decoration: none;
-  font-size: 0.72rem; font-weight: 400;
-  letter-spacing: 0.07em; text-transform: uppercase;
-  transition: all 0.2s; border: 1px solid transparent;
+  font-size: 0.7rem; font-weight: 400; letter-spacing: 0.07em; text-transform: uppercase;
+  border: 1px solid transparent; transition: all 0.2s;
 }
-.nav-links a .ni { font-family: 'Space Mono', monospace; font-size: 0.6rem; width: 20px; color: var(--blue-mid); flex-shrink: 0; transition: color 0.2s; }
-.nav-links a:hover { color: var(--text); background: rgba(37,99,196,0.08); border-color: var(--border); }
+.nav-links a .ni { font-family: 'Space Mono', monospace; font-size: 0.58rem; width: 18px; color: var(--blue-mid); flex-shrink: 0; }
+.nav-links a:hover  { color: var(--text); background: rgba(37,99,196,0.08); border-color: var(--border); }
 .nav-links a.active { color: var(--blue-glow); background: rgba(37,99,196,0.1); border-color: rgba(59,130,246,0.22); }
 .nav-links a.active .ni { color: var(--blue-glow); }
-.nav-bottom { display: flex; gap: 0.45rem; flex-wrap: wrap; padding-top: 1.4rem; border-top: 1px solid var(--border); }
-.nav-bottom a {
-  font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim);
-  text-decoration: none; padding: 0.3rem 0.55rem;
+.nav-foot { display: flex; gap: 0.4rem; flex-wrap: wrap; padding-top: 1.25rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+.nav-foot a {
+  font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--text-dim);
+  text-decoration: none; padding: 0.28rem 0.5rem;
   border: 1px solid var(--border); border-radius: 4px; transition: all 0.2s;
 }
-.nav-bottom a:hover { color: var(--blue-glow); border-color: rgba(59,130,246,0.4); }
- 
-/* MAIN */
-main { margin-left: var(--nav-w); flex: 1; position: relative; z-index: 1; }
-section { min-height: 100vh; padding: 5rem 4rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+.nav-foot a:hover { color: var(--blue-glow); border-color: rgba(59,130,246,0.4); }
+
+/* ── SHARED SECTION STYLES ── */
+section { padding: 5rem 4rem; border-bottom: 1px solid var(--border); }
 .slabel {
-  font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow);
-  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem;
-  display: flex; align-items: center; gap: 0.7rem;
+  font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow);
+  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.65rem;
+  display: flex; align-items: center; gap: 0.65rem;
 }
-.slabel::after { content: ''; flex: 1; max-width: 60px; height: 1px; background: var(--blue-mid); }
-.stitle { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 300; line-height: 1.1; margin-bottom: 3rem; letter-spacing: -0.01em; }
- 
-/* HERO */
-#hero { position: relative; overflow: hidden; }
+.slabel::after { content: ''; flex: 1; max-width: 55px; height: 1px; background: var(--blue-mid); }
+.stitle { font-size: clamp(1.75rem, 3.5vw, 2.5rem); font-weight: 300; line-height: 1.1; margin-bottom: 2.75rem; letter-spacing: -0.01em; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh; display: flex; flex-direction: column; justify-content: center;
+  position: relative; overflow: hidden;
+}
 #hero::before {
   content: ''; position: absolute; top: -200px; right: -200px;
   width: 600px; height: 600px;
-  background: radial-gradient(circle, rgba(37,99,196,0.1) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(37,99,196,0.09) 0%, transparent 70%);
   pointer-events: none;
 }
-.h-eye  { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--blue-glow); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1rem; opacity:0; animation: fu 0.6s 0.2s forwards; }
-.h-name { font-size: clamp(2.6rem, 6vw, 4.6rem); font-weight: 300; line-height: 1; margin-bottom: 1.2rem; letter-spacing: -0.02em; opacity:0; animation: fu 0.6s 0.4s forwards; }
+.h-pre  { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--blue-glow); letter-spacing: 0.25em; text-transform: uppercase; margin-bottom: 1rem; animation: fu 0.5s 0.1s both; }
+.h-name { font-size: clamp(2.5rem, 5.5vw, 4.5rem); font-weight: 300; line-height: 1; margin-bottom: 1.15rem; letter-spacing: -0.02em; animation: fu 0.5s 0.25s both; }
 .h-name span { color: var(--blue-glow); display: block; font-weight: 500; }
-.h-type { font-family: 'Space Mono', monospace; font-size: clamp(0.8rem, 1.4vw, 0.92rem); color: var(--text-mid); margin-bottom: 1.75rem; min-height: 1.6em; opacity:0; animation: fu 0.6s 0.6s forwards; }
+.h-type { font-family: 'Space Mono', monospace; font-size: clamp(0.78rem, 1.3vw, 0.9rem); color: var(--text-mid); margin-bottom: 1.65rem; min-height: 1.5em; animation: fu 0.5s 0.4s both; }
 #ttext  { color: var(--blue-glow); }
 .cur    { display: inline-block; width: 2px; height: 1em; background: var(--blue-glow); margin-left: 2px; vertical-align: middle; animation: blink 1s infinite; }
-.h-bio  { max-width: 540px; font-size: 0.88rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 2.5rem; opacity:0; animation: fu 0.6s 0.8s forwards; }
-.h-ctas { display: flex; gap: 1rem; flex-wrap: wrap; opacity:0; animation: fu 0.6s 1s forwards; }
-.btn-p  { padding: 0.65rem 1.5rem; background: var(--blue-mid); color: #fff; border: 1px solid var(--blue-hi); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
-.btn-p:hover { background: var(--blue-hi); box-shadow: 0 0 18px rgba(37,99,196,0.35); }
-.btn-g  { padding: 0.65rem 1.5rem; background: transparent; color: var(--text-mid); border: 1px solid var(--border); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; }
+.h-bio  { max-width: 520px; font-size: 0.87rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 2.25rem; animation: fu 0.5s 0.55s both; }
+.h-ctas { display: flex; gap: 0.85rem; flex-wrap: wrap; animation: fu 0.5s 0.7s both; }
+.h-stats { display: flex; gap: 2.75rem; margin-top: 3.75rem; padding-top: 2rem; border-top: 1px solid var(--border); animation: fu 0.5s 0.85s both; flex-wrap: wrap; }
+.snum  { font-size: 1.7rem; font-weight: 500; color: var(--blue-glow); font-family: 'Space Mono', monospace; line-height: 1; }
+.slbl2 { font-size: 0.6rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
+
+/* buttons */
+.btn-p { padding: 0.62rem 1.4rem; background: var(--blue-mid); color: #fff; border: 1px solid var(--blue-hi); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-block; }
+.btn-p:hover { background: var(--blue-hi); box-shadow: 0 0 16px rgba(37,99,196,0.3); }
+.btn-g { padding: 0.62rem 1.4rem; background: transparent; color: var(--text-mid); border: 1px solid var(--border); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.66rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; display: inline-block; }
 .btn-g:hover { border-color: var(--blue-mid); color: var(--text); }
-.h-stats { display: flex; gap: 3rem; margin-top: 4rem; padding-top: 2rem; border-top: 1px solid var(--border); opacity:0; animation: fu 0.6s 1.2s forwards; flex-wrap: wrap; }
-.snum  { font-size: 1.75rem; font-weight: 500; color: var(--blue-glow); font-family: 'Space Mono', monospace; line-height: 1; }
-.slbl2 { font-size: 0.62rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
- 
-/* TIMELINE */
+
+/* ── TIMELINE ── */
 .timeline { position: relative; padding-left: 2rem; }
 .timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--blue-mid), transparent); }
-.ti { position: relative; margin-bottom: 2.75rem; padding-left: 1.5rem; }
-.ti::before { content: ''; position: absolute; left: -2.4rem; top: 0.4rem; width: 8px; height: 8px; border-radius: 50%; background: var(--blue-glow); box-shadow: 0 0 8px rgba(59,130,246,0.45); }
-.ti-date { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); letter-spacing: 0.1em; margin-bottom: 0.3rem; }
-.ti-role { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.12rem; }
-.ti-co   { font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.55rem; }
-.ti-desc { font-size: 0.8rem; line-height: 1.85; color: var(--text-dim); }
-.rbtn { margin-top: 2.5rem; }
- 
-/* CERTS */
-.cgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1rem; }
-.cc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.35rem; transition: all 0.2s; position: relative; overflow: hidden; }
+.ti { position: relative; margin-bottom: 2.5rem; padding-left: 1.4rem; }
+.ti::before { content: ''; position: absolute; left: -2.35rem; top: 0.4rem; width: 8px; height: 8px; border-radius: 50%; background: var(--blue-glow); box-shadow: 0 0 7px rgba(59,130,246,0.45); }
+.ti-date { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow); letter-spacing: 0.1em; margin-bottom: 0.28rem; }
+.ti-role { font-size: 0.98rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
+.ti-co   { font-size: 0.78rem; color: var(--text-mid); margin-bottom: 0.5rem; }
+.ti-desc { font-size: 0.78rem; line-height: 1.85; color: var(--text-dim); }
+.rbtn    { margin-top: 2.25rem; }
+
+/* ── CERTS ── */
+.cgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 1rem; }
+.cc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 1.3rem; transition: all 0.2s; position: relative; overflow: hidden; }
 .cc::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; background: var(--blue-mid); transition: background 0.2s; }
 .cc:hover { border-color: rgba(59,130,246,0.28); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.1); }
 .cc:hover::before { background: var(--blue-glow); }
-.cbadge  { font-family: 'Space Mono', monospace; font-size: 0.56rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(37,99,196,0.1); color: var(--blue-glow); border: 1px solid rgba(59,130,246,0.18); display: inline-block; margin-bottom: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; }
-.cname   { font-size: 0.92rem; font-weight: 500; color: var(--text); margin-bottom: 0.22rem; line-height: 1.3; }
-.cissuer { font-size: 0.76rem; color: var(--text-dim); margin-bottom: 0.35rem; }
-.cdate   { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--text-dim); }
- 
-/* PROJECTS */
-.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 1.4rem; }
-.pc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all 0.25s; position: relative; display: flex; flex-direction: column; }
+.cbadge  { font-family: 'Space Mono', monospace; font-size: 0.54rem; padding: 0.18rem 0.48rem; border-radius: 4px; background: rgba(37,99,196,0.1); color: var(--blue-glow); border: 1px solid rgba(59,130,246,0.18); display: inline-block; margin-bottom: 0.55rem; letter-spacing: 0.1em; text-transform: uppercase; }
+.cname   { font-size: 0.9rem; font-weight: 500; color: var(--text); margin-bottom: 0.2rem; line-height: 1.3; }
+.cissuer { font-size: 0.74rem; color: var(--text-dim); margin-bottom: 0.3rem; }
+.cdate   { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim); }
+
+/* ── PROJECTS ── */
+.pgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.35rem; }
+.pc { background: var(--card); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: all 0.25s; display: flex; flex-direction: column; position: relative; }
 .pc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
-.pc:hover { border-color: rgba(59,130,246,0.28); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
+.pc:hover { border-color: rgba(59,130,246,0.28); box-shadow: 0 10px 28px rgba(0,0,0,0.1); }
 .pc:hover::after { transform: scaleX(1); }
- 
 /* screenshot */
-.pc-img { width: 100%; height: 190px; background: var(--img-bg); border-bottom: 1px solid var(--img-border); overflow: hidden; position: relative; flex-shrink: 0; }
+.pc-img { width: 100%; height: 185px; background: var(--img-bg); border-bottom: 1px solid var(--img-border); overflow: hidden; position: relative; flex-shrink: 0; }
 .pc-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
 .pc:hover .pc-img img { transform: scale(1.04); }
-.pc-img-placeholder {
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 0.55rem; width: 100%; height: 100%;
-  font-family: 'Space Mono', monospace; font-size: 0.62rem;
-  color: var(--text-dim); letter-spacing: 0.08em; opacity: 0.7;
-}
-.pc-img-placeholder svg { width: 26px; height: 26px; stroke: var(--blue-glow); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.5; }
-.pc-img-label {
-  position: absolute; bottom: 0.55rem; right: 0.65rem;
-  font-family: 'Space Mono', monospace; font-size: 0.56rem;
-  color: var(--blue-glow); background: var(--scrim);
-  padding: 0.18rem 0.45rem; border-radius: 3px; letter-spacing: 0.06em;
-  backdrop-filter: blur(4px);
-}
-.pc-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-.pnum  { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-mid); letter-spacing: 0.15em; margin-bottom: 0.55rem; }
-.pname { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.55rem; line-height: 1.2; }
-.pdesc { font-size: 0.8rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 1rem; flex: 1; }
-.ptags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1rem; }
-.tag   { font-family: 'Space Mono', monospace; font-size: 0.56rem; padding: 0.2rem 0.5rem; border-radius: 4px; background: rgba(37,99,196,0.08); color: var(--text-mid); border: 1px solid var(--border); letter-spacing: 0.04em; }
-.plink { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--blue-glow); text-decoration: none; letter-spacing: 0.05em; border: 1px solid rgba(59,130,246,0.28); padding: 0.32rem 0.7rem; border-radius: 4px; transition: all 0.2s; align-self: flex-start; }
+.pc-img-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; height: 100%; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.08em; }
+.pc-img-placeholder svg { width: 24px; height: 24px; stroke: var(--blue-glow); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.45; }
+.pc-img-label { position: absolute; bottom: 0.5rem; right: 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--blue-glow); background: var(--scrim); padding: 0.16rem 0.42rem; border-radius: 3px; letter-spacing: 0.06em; }
+.pc-body  { padding: 1.4rem; flex: 1; display: flex; flex-direction: column; }
+.pnum  { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-mid); letter-spacing: 0.15em; margin-bottom: 0.5rem; }
+.pname { font-size: 0.97rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; line-height: 1.2; }
+.pdesc { font-size: 0.78rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 0.9rem; flex: 1; }
+.ptags { display: flex; flex-wrap: wrap; gap: 0.38rem; margin-bottom: 0.9rem; }
+.tag   { font-family: 'Space Mono', monospace; font-size: 0.54rem; padding: 0.18rem 0.48rem; border-radius: 4px; background: rgba(37,99,196,0.08); color: var(--text-mid); border: 1px solid var(--border); letter-spacing: 0.04em; }
+.plink { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); text-decoration: none; letter-spacing: 0.05em; border: 1px solid rgba(59,130,246,0.28); padding: 0.3rem 0.65rem; border-radius: 4px; transition: all 0.2s; align-self: flex-start; }
 .plink:hover { background: rgba(37,99,196,0.12); border-color: var(--blue-glow); }
- 
-/* SKILLS */
-.sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 0.7rem 3rem; }
-.scat  { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow); letter-spacing: 0.2em; text-transform: uppercase; margin: 1.6rem 0 0.65rem; padding-bottom: 0.45rem; border-bottom: 1px solid var(--border); grid-column: 1 / -1; }
-.ski   { margin-bottom: 0.7rem; }
-.skh   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.38rem; }
-.skn   { font-size: 0.76rem; color: var(--text-mid); }
-.skp   { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); }
+
+/* ── SKILLS ── */
+.sgrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 0.65rem 3rem; }
+.scat  { font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--blue-glow); letter-spacing: 0.2em; text-transform: uppercase; margin: 1.5rem 0 0.6rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--border); grid-column: 1 / -1; }
+.ski   { margin-bottom: 0.65rem; }
+.skh   { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.36rem; }
+.skn   { font-size: 0.74rem; color: var(--text-mid); }
+.skp   { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow); }
 .skbar { height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
 .skfill { height: 100%; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); border-radius: 2px; width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
- 
-/* CONTACT */
-#contact { min-height: auto; padding-bottom: 6rem; }
+
+/* ── CONTACT ── */
+#contact { border-bottom: none; }
 .cgr2  { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
-.clead { font-size: 0.9rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 2rem; }
-.clinks { display: flex; flex-direction: column; gap: 0.6rem; }
-.clink  { display: flex; align-items: center; gap: 1rem; padding: 0.85rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-mid); font-size: 0.8rem; transition: all 0.2s; }
+.clead { font-size: 0.88rem; line-height: 1.85; color: var(--text-dim); margin-bottom: 1.75rem; }
+.clinks { display: flex; flex-direction: column; gap: 0.55rem; }
+.clink  { display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem 0.95rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-mid); font-size: 0.78rem; transition: all 0.2s; }
 .clink:hover { border-color: rgba(59,130,246,0.28); color: var(--text); background: rgba(37,99,196,0.06); }
-.cico  { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow); width: 56px; flex-shrink: 0; letter-spacing: 0.04em; }
- 
-/* ANIMATIONS */
-@keyframes fu { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: none; } }
+.cico  { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow); width: 54px; flex-shrink: 0; letter-spacing: 0.04em; }
+
+/* ── ANIMATIONS ── */
+@keyframes fu    { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform: none; } }
 @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.reveal { opacity:0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity:1; transform: none; }
- 
+
+/* Scroll reveal — sections always visible, items fade in */
+.fade-item { opacity: 0; transform: translateY(16px); transition: opacity 0.6s ease, transform 0.6s ease; }
+.fade-item.in { opacity: 1; transform: none; }
+
+/* ── SCROLLBAR ── */
 ::-webkit-scrollbar { width: 3px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
- 
-@media (max-width: 768px) {
-  :root { --nav-w: 0px; }
-  nav { transform: translateX(-100%); }
-  main { margin-left: 0; }
-  section { padding: 4rem 1.5rem; }
+::-webkit-scrollbar-thumb { background: var(--blue-mid); border-radius: 2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .content { margin-left: 0; }
+  nav { transform: translateX(-100%); transition: transform 0.3s; }
+  nav.open { transform: translateX(0); }
+  .theme-btn { top: 0.75rem; right: 0.75rem; }
+  section { padding: 3.5rem 1.5rem; }
+  #hero { min-height: auto; padding-top: 4rem; }
   .cgr2 { grid-template-columns: 1fr; gap: 2rem; }
-  .h-stats { gap: 1.5rem; }
-  .theme-toggle { top: 0.75rem; right: 0.75rem; }
   .pgrid { grid-template-columns: 1fr; }
+  .h-stats { gap: 1.5rem; }
 }
 </style>
 </head>
 <body>
- 
+
 <!-- THEME TOGGLE -->
-<button class="theme-toggle" id="themeToggle" aria-label="Toggle light/dark theme">
-  <svg id="themeIcon" viewBox="0 0 24 24">
+<button class="theme-btn" id="themeBtn" aria-label="Toggle theme">
+  <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="var(--blue-glow)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
     <path id="themeIconPath" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/>
   </svg>
   <span id="themeLabel">Light</span>
 </button>
- 
-<!-- NAV -->
-<nav>
+
+<!-- SIDE NAV -->
+<div class="page">
+<nav id="sidenav">
   <div class="nav-logo">// portfolio</div>
   <div class="nav-name">Sammy Campos Rivera</div>
-  <div class="nav-title">Cybersecurity &amp; Cloud</div>
-  <div class="nav-links">
-    <a href="#hero"       class="active"><span class="ni">01</span> Home</a>
-    <a href="#experience">               <span class="ni">02</span> Experience</a>
-    <a href="#certs">                    <span class="ni">03</span> Certs &amp; Edu</a>
-    <a href="#projects">                 <span class="ni">04</span> Projects</a>
-    <a href="#skills">                   <span class="ni">05</span> Skills</a>
-    <a href="#contact">                  <span class="ni">06</span> Contact</a>
-  </div>
-  <div class="nav-bottom">
-    <a href="https://linkedin.com/in/scamover9"  target="_blank" rel="noopener">LinkedIn</a>
-    <a href="https://github.com/labscamover9"    target="_blank" rel="noopener">GitHub</a>
-    <a href="https://labscamover9.com"           target="_blank" rel="noopener">Homelab ↗</a>
+  <div class="nav-sub">Cybersecurity &amp; Cloud</div>
+  <ul class="nav-links">
+    <li><a href="#hero"       class="active"><span class="ni">01</span> Home</a></li>
+    <li><a href="#experience">              <span class="ni">02</span> Experience</a></li>
+    <li><a href="#certs">                   <span class="ni">03</span> Certs &amp; Edu</a></li>
+    <li><a href="#projects">                <span class="ni">04</span> Projects</a></li>
+    <li><a href="#skills">                  <span class="ni">05</span> Skills</a></li>
+    <li><a href="#contact">                 <span class="ni">06</span> Contact</a></li>
+  </ul>
+  <div class="nav-foot">
+    <a href="https://linkedin.com/in/scamover9" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="https://github.com/labscamover9"   target="_blank" rel="noopener">GitHub</a>
+    <a href="https://labscamover9.com"          target="_blank" rel="noopener">Homelab ↗</a>
   </div>
 </nav>
- 
-<main>
- 
+
+<!-- CONTENT -->
+<div class="content">
+
 <!-- HERO -->
 <section id="hero">
-  <div class="h-eye">Available for opportunities · DFW Area</div>
+  <div class="h-pre">Available for opportunities · DFW Area</div>
   <h1 class="h-name">Sammy<span>Campos Rivera</span></h1>
   <div class="h-type"><span id="ttext"></span><span class="cur"></span></div>
   <p class="h-bio">Cybersecurity student and CompTIA A+ certified technician based in the Dallas–Fort Worth area. I build and maintain self-hosted infrastructure, pursue security certifications, and bring hands-on technical experience from IT support, broadcast production, and systems administration.</p>
@@ -289,103 +289,66 @@ section { min-height: 100vh; padding: 5rem 4rem; border-bottom: 1px solid var(--
     <div><div class="snum">S+</div><div class="slbl2">Next Cert</div></div>
   </div>
 </section>
- 
+
 <!-- EXPERIENCE -->
 <section id="experience">
   <div class="slabel">02 — Work History</div>
   <h2 class="stitle">Experience</h2>
-  <div class="timeline reveal">
-    <div class="ti">
+  <div class="timeline">
+    <div class="ti fade-item">
       <div class="ti-date">Nov 2025 — Present</div>
       <div class="ti-role">Substitute Teacher</div>
       <div class="ti-co">Ferris High School · Ferris, TX</div>
       <div class="ti-desc">Supporting classroom instruction while continuing to pursue cybersecurity and cloud computing certifications full time.</div>
     </div>
-    <div class="ti">
+    <div class="ti fade-item">
       <div class="ti-date">May 2024 — Aug 2025</div>
       <div class="ti-role">Help Desk Technician</div>
       <div class="ti-co">Luis's Mexican Food &amp; Grill · Garland, TX</div>
-      <div class="ti-desc">Sole IT resource for all technical operations — managed POS terminals, network access points, computers, televisions, and landline phones. Resolved hardware and software issues independently in a fast-paced environment with no escalation path.</div>
+      <div class="ti-desc">Sole IT resource for all technical operations — managed POS terminals, network access points, computers, televisions, and landline phones. Resolved hardware and software issues independently with no escalation path.</div>
     </div>
-    <div class="ti">
+    <div class="ti fade-item">
       <div class="ti-date">Aug 2022 — Apr 2024</div>
       <div class="ti-role">Computer Equipment Manager</div>
       <div class="ti-co">Bricktown Gaming @ Ferris High School · Ferris, TX</div>
-      <div class="ti-desc">Provided technical support, resolved user issues, and performed routine equipment maintenance to ensure optimal system performance and longevity.</div>
+      <div class="ti-desc">Provided technical support, resolved user issues, and performed routine equipment maintenance to ensure optimal performance and longevity.</div>
     </div>
-    <div class="ti">
+    <div class="ti fade-item">
       <div class="ti-date">Aug 2020 — Apr 2024</div>
       <div class="ti-role">IT Support / Team Lead</div>
       <div class="ti-co">Bugeyemedia @ Ferris High School · Ferris, TX</div>
-      <div class="ti-desc">Led a 16-person cross-departmental team producing live sports broadcasts, pre-recorded content, and live shows with 5–7 on-air anchors. Responsible for installation, management, and real-time troubleshooting of all computer, camera, and audio equipment.</div>
+      <div class="ti-desc">Led a 16-person cross-departmental team producing live sports broadcasts, pre-recorded content, and live shows with 5–7 on-air anchors. Responsible for all computer, camera, and audio equipment installation, updates, and real-time troubleshooting.</div>
     </div>
   </div>
-  <div class="rbtn reveal">
+  <div class="rbtn">
     <a href="resume.pdf" download class="btn-p">Download Full Resume (PDF)</a>
   </div>
 </section>
- 
+
 <!-- CERTS & EDUCATION -->
 <section id="certs">
   <div class="slabel">03 — Credentials</div>
   <h2 class="stitle">Certifications &amp; Education</h2>
-  <div class="cgrid reveal">
-    <div class="cc">
-      <div class="cbadge">Active · Expires Feb 2029</div>
-      <div class="cname">CompTIA A+</div>
-      <div class="cissuer">CompTIA — Plus Series</div>
-      <div class="cdate">Issued Feb 18, 2026 · ID: COMP001022966609</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">In Progress</div>
-      <div class="cname">CompTIA Security+</div>
-      <div class="cissuer">CompTIA</div>
-      <div class="cdate">Target 2026</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">Certification</div>
-      <div class="cname">Microsoft Office Specialist: Associate</div>
-      <div class="cissuer">Microsoft — Office 365 &amp; 2019</div>
-      <div class="cdate">Verified</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">Certification</div>
-      <div class="cname">Foundations of Project Management</div>
-      <div class="cissuer">Google / Coursera</div>
-      <div class="cdate">Completed</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">2024</div>
-      <div class="cname">Cloud Computing</div>
-      <div class="cissuer">Dallas College</div>
-      <div class="cdate">August 2024</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">Certificate · 2024</div>
-      <div class="cname">Cybersecurity — Level 1</div>
-      <div class="cissuer">Texas State Technical College</div>
-      <div class="cdate">Aug 2022 — Mar 2024</div>
-    </div>
-    <div class="cc">
-      <div class="cbadge">Diploma · 2024</div>
-      <div class="cname">High School Diploma</div>
-      <div class="cissuer">Ferris High School</div>
-      <div class="cdate">Aug 2020 — May 2024</div>
-    </div>
+  <div class="cgrid">
+    <div class="cc fade-item"><div class="cbadge">Active · Expires Feb 2029</div><div class="cname">CompTIA A+</div><div class="cissuer">CompTIA — Plus Series</div><div class="cdate">Issued Feb 18, 2026 · ID: COMP001022966609</div></div>
+    <div class="cc fade-item"><div class="cbadge">In Progress</div><div class="cname">CompTIA Security+</div><div class="cissuer">CompTIA</div><div class="cdate">Target 2026</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certification</div><div class="cname">Microsoft Office Specialist: Associate</div><div class="cissuer">Microsoft — Office 365 &amp; 2019</div><div class="cdate">Verified</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certification</div><div class="cname">Foundations of Project Management</div><div class="cissuer">Google / Coursera</div><div class="cdate">Completed</div></div>
+    <div class="cc fade-item"><div class="cbadge">2024</div><div class="cname">Cloud Computing</div><div class="cissuer">Dallas College</div><div class="cdate">August 2024</div></div>
+    <div class="cc fade-item"><div class="cbadge">Certificate · 2024</div><div class="cname">Cybersecurity — Level 1</div><div class="cissuer">Texas State Technical College</div><div class="cdate">Aug 2022 — Mar 2024</div></div>
+    <div class="cc fade-item"><div class="cbadge">Diploma · 2024</div><div class="cname">High School Diploma</div><div class="cissuer">Ferris High School</div><div class="cdate">Aug 2020 — May 2024</div></div>
   </div>
 </section>
- 
+
 <!-- PROJECTS -->
 <section id="projects">
   <div class="slabel">04 — Built Things</div>
   <h2 class="stitle">Projects</h2>
-  <div class="pgrid reveal">
- 
-    <!-- Homelab -->
-    <div class="pc">
+  <div class="pgrid">
+
+    <div class="pc fade-item">
       <div class="pc-img">
-        <img src="proxmox.png" alt="Proxmox cluster dashboard"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <img src="proxmox.png" alt="Proxmox cluster dashboard" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
         <div class="pc-img-placeholder" style="display:none">
           <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
           proxmox.png
@@ -396,19 +359,14 @@ section { min-height: 100vh; padding: 5rem 4rem; border-bottom: 1px solid var(--
         <div class="pnum">// 01</div>
         <div class="pname">Self-Hosted Homelab</div>
         <div class="pdesc">Designed and maintain a production-grade homelab running a 3-node Proxmox cluster with TrueNAS RAIDZ1 storage, containerized services via Docker, and a full monitoring stack. Layered security using Cloudflare WAF, Tailscale, and WireGuard VPN. Hosts 10+ self-managed services including media, photo management, documentation, and home automation.</div>
-        <div class="ptags">
-          <span class="tag">Proxmox</span><span class="tag">TrueNAS</span><span class="tag">Docker</span>
-          <span class="tag">Tailscale</span><span class="tag">Cloudflare</span><span class="tag">Linux</span>
-        </div>
+        <div class="ptags"><span class="tag">Proxmox</span><span class="tag">TrueNAS</span><span class="tag">Docker</span><span class="tag">Tailscale</span><span class="tag">Cloudflare</span><span class="tag">Linux</span></div>
         <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
       </div>
     </div>
- 
-    <!-- Monitoring -->
-    <div class="pc">
+
+    <div class="pc fade-item">
       <div class="pc-img">
-        <img src="grafana.png" alt="Grafana monitoring dashboard"
-             onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+        <img src="grafana.png" alt="Grafana monitoring dashboard" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
         <div class="pc-img-placeholder" style="display:none">
           <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
           grafana.png
@@ -418,78 +376,67 @@ section { min-height: 100vh; padding: 5rem 4rem; border-bottom: 1px solid var(--
       <div class="pc-body">
         <div class="pnum">// 02</div>
         <div class="pname">Infrastructure Monitoring Stack</div>
-        <div class="pdesc">Built a full observability stack using Prometheus for metrics scraping across all Proxmox nodes and VMs, feeding into Grafana for real-time visualization of CPU, memory, disk, and network traffic. Configured uptime tracking with Uptime Kuma and alerting across all hosted services.</div>
-        <div class="ptags">
-          <span class="tag">Grafana</span><span class="tag">Prometheus</span>
-          <span class="tag">Uptime Kuma</span><span class="tag">Node Exporter</span>
-        </div>
+        <div class="pdesc">Built a full observability stack using Prometheus for metrics scraping across all Proxmox nodes and VMs, feeding into Grafana for real-time visualization of CPU, memory, disk I/O, and network traffic. Configured uptime tracking with Uptime Kuma and alerting across all hosted services.</div>
+        <div class="ptags"><span class="tag">Grafana</span><span class="tag">Prometheus</span><span class="tag">Uptime Kuma</span><span class="tag">Node Exporter</span></div>
         <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
       </div>
     </div>
- 
-    <!-- Bugeyemedia -->
-    <div class="pc">
-      <div class="pc-body" style="padding-top:1.75rem">
+
+    <div class="pc fade-item">
+      <div class="pc-body" style="padding-top:1.6rem">
         <div class="pnum">// 03</div>
         <div class="pname">Bugeyemedia Broadcast Infrastructure</div>
-        <div class="pdesc">Built and managed full AV and IT infrastructure for live high school sports broadcasts. Led a 16-person team producing live shows with 5–7 on-air anchors, video editing pipelines, and pre-recorded content. Handled all equipment installation, updates, and real-time troubleshooting during live broadcasts across a 4-year run.</div>
-        <div class="ptags">
-          <span class="tag">AV Systems</span><span class="tag">Team Lead</span>
-          <span class="tag">Live Broadcast</span><span class="tag">Video Editing</span>
-        </div>
+        <div class="pdesc">Built and managed complete AV and IT infrastructure for live high school sports broadcasts. Led a 16-person team across multiple departments producing live shows with 5–7 on-air anchors, video editing pipelines, and pre-recorded content. Handled all equipment installation, updates, and real-time troubleshooting over a 4-year run.</div>
+        <div class="ptags"><span class="tag">AV Systems</span><span class="tag">Team Lead</span><span class="tag">Live Broadcast</span><span class="tag">Video Editing</span></div>
       </div>
     </div>
- 
-    <!-- Portfolio site -->
-    <div class="pc">
-      <div class="pc-body" style="padding-top:1.75rem">
+
+    <div class="pc fade-item">
+      <div class="pc-body" style="padding-top:1.6rem">
         <div class="pnum">// 04</div>
         <div class="pname">Portfolio &amp; Resume Website</div>
         <div class="pdesc">Designed and built this portfolio hosted on GitHub Pages. Features a light/dark theme toggle defaulting to dark, animated typing hero, scroll-triggered animations, downloadable PDF resume, and social links. Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies.</div>
-        <div class="ptags">
-          <span class="tag">HTML/CSS</span><span class="tag">JavaScript</span>
-          <span class="tag">GitHub Pages</span><span class="tag">Responsive</span>
-        </div>
+        <div class="ptags"><span class="tag">HTML/CSS</span><span class="tag">JavaScript</span><span class="tag">GitHub Pages</span><span class="tag">Responsive</span></div>
         <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">labscamover9.com ↗</a>
       </div>
     </div>
- 
+
   </div>
 </section>
- 
+
 <!-- SKILLS -->
 <section id="skills">
   <div class="slabel">05 — Capabilities</div>
   <h2 class="stitle">Skills</h2>
-  <div class="sgrid reveal">
+  <div class="sgrid" id="skillsGrid">
     <div class="scat">Infrastructure &amp; Virtualization</div>
-    <div class="ski"><div class="skh"><span class="skn">Proxmox VE</span><span class="skp">85%</span></div><div class="skbar"><div class="skfill" data-w="85"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">TrueNAS / Storage</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">Docker / Containers</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">Linux (Debian / RHEL)</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Proxmox VE</span><span class="skp">85%</span></div><div class="skbar"><div class="skfill" data-w="85"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">TrueNAS / Storage</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Docker / Containers</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Linux (Debian / RHEL)</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
     <div class="scat">Networking &amp; Security</div>
-    <div class="ski"><div class="skh"><span class="skn">Networking &amp; DNS</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">Cloudflare / WAF</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">WireGuard / Tailscale</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">Cybersecurity Fundamentals</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Networking &amp; DNS</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Cloudflare / WAF</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">WireGuard / Tailscale</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Cybersecurity Fundamentals</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
     <div class="scat">Monitoring &amp; Web</div>
-    <div class="ski"><div class="skh"><span class="skn">Grafana / Prometheus</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">HTML / CSS / JavaScript</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">IT Hardware Support</span><span class="skp">90%</span></div><div class="skbar"><div class="skfill" data-w="90"></div></div></div>
-    <div class="ski"><div class="skh"><span class="skn">System Configuration</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">Grafana / Prometheus</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">HTML / CSS / JavaScript</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">IT Hardware Support</span><span class="skp">90%</span></div><div class="skbar"><div class="skfill" data-w="90"></div></div></div>
+    <div class="ski fade-item"><div class="skh"><span class="skn">System Configuration</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
   </div>
 </section>
- 
+
 <!-- CONTACT -->
 <section id="contact">
   <div class="slabel">06 — Get In Touch</div>
   <h2 class="stitle">Contact</h2>
-  <div class="cgr2 reveal">
-    <div>
+  <div class="cgr2">
+    <div class="fade-item">
       <p class="clead">Currently open to IT, cybersecurity, and systems administration opportunities in the DFW area. Whether you have a role, a question, or just want to talk tech — reach out.</p>
       <a href="mailto:scamposrivera@icloud.com" class="btn-p">Send an Email</a>
     </div>
-    <div class="clinks">
+    <div class="clinks fade-item">
       <a href="mailto:scamposrivera@icloud.com" class="clink"><span class="cico">EMAIL</span>scamposrivera@icloud.com</a>
       <a href="https://linkedin.com/in/scamover9" target="_blank" rel="noopener" class="clink"><span class="cico">LINKEDIN</span>linkedin.com/in/scamover9</a>
       <a href="https://labscamover9.com" target="_blank" rel="noopener" class="clink"><span class="cico">HOMELAB</span>labscamover9.com</a>
@@ -497,871 +444,105 @@ section { min-height: 100vh; padding: 5rem 4rem; border-bottom: 1px solid var(--
     </div>
   </div>
 </section>
- 
-</main>
- 
+
+</div><!-- end .content -->
+</div><!-- end .page -->
+
 <script>
-// THEME TOGGLE
-const html  = document.documentElement;
-const btn   = document.getElementById('themeToggle');
-const iPath = document.getElementById('themeIconPath');
-const label = document.getElementById('themeLabel');
-const MOON  = 'M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z';
-const SUN   = 'M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M15.54 8.46a6 6 0 1 1-7.07 7.07';
- 
-function applyTheme(t) {
-  html.dataset.theme = t;
-  localStorage.setItem('theme', t);
-  iPath.setAttribute('d', t === 'dark' ? MOON : SUN);
-  label.textContent = t === 'dark' ? 'Light' : 'Dark';
-  // swap icon stroke vs fill for moon/sun
-  const svg = document.getElementById('themeIcon');
-  if (t === 'dark') { svg.style.fill = 'var(--blue-glow)'; svg.style.stroke = 'none'; }
-  else              { svg.style.fill = 'none'; svg.style.stroke = 'var(--blue-glow)'; }
-}
-applyTheme(localStorage.getItem('theme') || 'dark');
-btn.addEventListener('click', () => applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
- 
-// TYPED
-const roles = ['CompTIA A+ Certified','Cybersecurity Student','Homelab Engineer','Linux Sysadmin','Security+ In Progress'];
-let ri=0, ci=0, del=false;
-const el = document.getElementById('ttext');
-function type() {
-  const w = roles[ri];
-  if (!del) { el.textContent = w.slice(0,++ci); if(ci===w.length){del=true;setTimeout(type,1800);return;} }
-  else      { el.textContent = w.slice(0,--ci); if(ci===0){del=false;ri=(ri+1)%roles.length;} }
-  setTimeout(type, del?45:80);
-}
-type();
- 
-// SCROLL REVEAL + SKILL BARS
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      e.target.querySelectorAll('.skfill').forEach(b => b.style.width = b.dataset.w + '%');
+// ── THEME ── runs immediately, no DOMContentLoaded needed
+(function() {
+  var html  = document.documentElement;
+  var saved = localStorage.getItem('scamover-theme') || 'dark';
+  html.dataset.theme = saved;
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+
+  // Theme toggle
+  var html  = document.documentElement;
+  var btn   = document.getElementById('themeBtn');
+  var iPath = document.getElementById('themeIconPath');
+  var label = document.getElementById('themeLabel');
+  var MOON  = 'M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z';
+  var SUN   = 'M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12z';
+
+  function applyTheme(t) {
+    html.dataset.theme = t;
+    localStorage.setItem('scamover-theme', t);
+    if (iPath) iPath.setAttribute('d', t === 'dark' ? MOON : SUN);
+    if (label) label.textContent = t === 'dark' ? 'Light' : 'Dark';
+  }
+
+  // apply saved theme on load
+  applyTheme(localStorage.getItem('scamover-theme') || 'dark');
+
+  if (btn) {
+    btn.addEventListener('click', function() {
+      applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  // Typed animation
+  var roles = ['CompTIA A+ Certified','Cybersecurity Student','Homelab Engineer','Linux Sysadmin','Security+ In Progress'];
+  var ri = 0, ci = 0, del = false;
+  var el = document.getElementById('ttext');
+  function type() {
+    if (!el) return;
+    var w = roles[ri];
+    if (!del) {
+      el.textContent = w.slice(0, ++ci);
+      if (ci === w.length) { del = true; setTimeout(type, 1800); return; }
+    } else {
+      el.textContent = w.slice(0, --ci);
+      if (ci === 0) { del = false; ri = (ri + 1) % roles.length; }
     }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
- 
-// ACTIVE NAV
-const secs = document.querySelectorAll('section[id]');
-const nls  = document.querySelectorAll('.nav-links a');
-secs.forEach(s => new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      nls.forEach(a => a.classList.remove('active'));
-      const l = document.querySelector(`.nav-links a[href="#${e.target.id}"]`);
-      if (l) l.classList.add('active');
-    }
-  });
-}, { threshold: 0.4 }).observe(s));
+    setTimeout(type, del ? 45 : 80);
+  }
+  type();
+
+  // Scroll reveal — fade-item starts hidden, revealed on scroll
+  // Fall back: if IntersectionObserver not supported, show everything
+  var fadeItems = document.querySelectorAll('.fade-item');
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          // trigger skill bars
+          e.target.querySelectorAll('.skfill').forEach(function(b) {
+            b.style.width = b.dataset.w + '%';
+          });
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+    fadeItems.forEach(function(el) { obs.observe(el); });
+  } else {
+    // fallback: show all immediately
+    fadeItems.forEach(function(el) {
+      el.classList.add('in');
+      el.querySelectorAll('.skfill').forEach(function(b) { b.style.width = b.dataset.w + '%'; });
+    });
+  }
+
+  // Active nav on scroll
+  var secs = document.querySelectorAll('section[id]');
+  var nls  = document.querySelectorAll('.nav-links a');
+  if ('IntersectionObserver' in window) {
+    secs.forEach(function(s) {
+      new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            nls.forEach(function(a) { a.classList.remove('active'); });
+            var l = document.querySelector('.nav-links a[href="#' + e.target.id + '"]');
+            if (l) l.classList.add('active');
+          }
+        });
+      }, { threshold: 0.4 }).observe(s);
+    });
+  }
+
+});
 </script>
 </body>
 </html>
- <!DOCTYPE html>
-<html lang="en" data-theme="dark">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sammy Campos Rivera — Portfolio</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-/* ── THEME TOKENS ── */
-[data-theme="dark"] {
-  --bg:        #080c12;
-  --bg2:       #0d1219;
-  --bg3:       #111820;
-  --card:      #0f1620;
-  --border:    #1a2535;
-  --blue:      #1a3a6e;
-  --blue-mid:  #1e4d9b;
-  --blue-hi:   #2563c4;
-  --blue-glow: #3b82f6;
-  --text:      #e2e8f0;
-  --text-dim:  #7a8fa8;
-  --text-mid:  #a0b4cc;
-  --grid-line: rgba(26,58,110,0.07);
-  --img-bg:    #0a1018;
-  --img-border:#1a2535;
-  --scrim:     rgba(8,12,18,0.75);
-}
-[data-theme="light"] {
-  --bg:        #f3f5fa;
-  --bg2:       #ffffff;
-  --bg3:       #e8ecf5;
-  --card:      #ffffff;
-  --border:    #cdd5e8;
-  --blue:      #bdd0f0;
-  --blue-mid:  #2563c4;
-  --blue-hi:   #1a4d9b;
-  --blue-glow: #1e40af;
-  --text:      #0f172a;
-  --text-dim:  #4b5a70;
-  --text-mid:  #334155;
-  --grid-line: rgba(37,99,196,0.05);
-  --img-bg:    #e8ecf5;
-  --img-border:#cdd5e8;
-  --scrim:     rgba(243,245,250,0.85);
-}
-
-/* ── RESET ── */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
-
-/* ── BASE ── */
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Sans', sans-serif;
-  min-height: 100vh;
-  overflow-x: hidden;
-  transition: background 0.35s, color 0.35s;
-}
-
-/* subtle grid background */
-body::before {
-  content: ''; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-  background-image:
-    linear-gradient(var(--grid-line) 1px, transparent 1px),
-    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
-  background-size: 40px 40px;
-}
-
-/* ── PAGE SHELL — side nav + content ── */
-.page-shell {
-  display: flex;
-  min-height: 100vh;
-  position: relative;
-  z-index: 1;
-}
-
-/* ── SIDE NAV ── */
-.sidenav {
-  width: 240px;
-  flex-shrink: 0;
-  position: fixed;
-  top: 0; left: 0;
-  height: 100vh;
-  background: var(--bg2);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  padding: 2.5rem 1.5rem;
-  z-index: 100;
-  transition: background 0.35s, border-color 0.35s, transform 0.3s;
-  overflow-y: auto;
-}
-
-.nav-logo  { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--blue-glow); margin-bottom: 0.2rem; letter-spacing: 0.1em; }
-.nav-name  { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.15rem; line-height: 1.25; transition: color 0.35s; }
-.nav-sub   { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim); margin-bottom: 2.5rem; letter-spacing: 0.05em; }
-
-.nav-links { display: flex; flex-direction: column; gap: 0.18rem; flex: 1; }
-.nav-links a {
-  display: flex; align-items: center; gap: 0.7rem;
-  padding: 0.52rem 0.7rem; border-radius: 6px;
-  color: var(--text-dim); text-decoration: none;
-  font-size: 0.72rem; letter-spacing: 0.07em; text-transform: uppercase;
-  border: 1px solid transparent;
-  transition: all 0.2s;
-}
-.nav-links a .ni { font-family: 'Space Mono', monospace; font-size: 0.6rem; width: 20px; color: var(--blue-mid); flex-shrink: 0; transition: color 0.2s; }
-.nav-links a:hover  { color: var(--text); background: rgba(37,99,196,0.08); border-color: var(--border); }
-.nav-links a.active { color: var(--blue-glow); background: rgba(37,99,196,0.1); border-color: rgba(59,130,246,0.22); }
-.nav-links a.active .ni { color: var(--blue-glow); }
-
-.nav-bottom { display: flex; gap: 0.45rem; flex-wrap: wrap; padding-top: 1.4rem; border-top: 1px solid var(--border); }
-.nav-bottom a {
-  font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--text-dim);
-  text-decoration: none; padding: 0.3rem 0.55rem;
-  border: 1px solid var(--border); border-radius: 4px; transition: all 0.2s;
-}
-.nav-bottom a:hover { color: var(--blue-glow); border-color: rgba(59,130,246,0.4); }
-
-/* ── MOBILE TOPBAR ── */
-.topbar {
-  display: none;
-  position: fixed; top: 0; left: 0; right: 0; z-index: 110;
-  background: var(--bg2); border-bottom: 1px solid var(--border);
-  padding: 0 1.2rem;
-  height: 56px;
-  align-items: center;
-  justify-content: space-between;
-  transition: background 0.35s;
-}
-.topbar-name { font-family: 'Space Mono', monospace; font-size: 0.72rem; color: var(--blue-glow); letter-spacing: 0.08em; }
-.topbar-right { display: flex; align-items: center; gap: 0.75rem; }
-
-/* hamburger */
-.hamburger {
-  background: none; border: none; cursor: pointer;
-  display: flex; flex-direction: column; gap: 5px; padding: 4px;
-}
-.hamburger span {
-  display: block; width: 22px; height: 2px;
-  background: var(--text-mid); border-radius: 2px;
-  transition: all 0.25s;
-}
-.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
-.hamburger.open span:nth-child(2) { opacity: 0; }
-.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
-
-/* mobile drawer overlay */
-.nav-overlay {
-  display: none;
-  position: fixed; inset: 0; z-index: 99;
-  background: rgba(0,0,0,0.5);
-  opacity: 0; transition: opacity 0.25s;
-}
-.nav-overlay.open { opacity: 1; }
-
-/* ── THEME TOGGLE (shared between topbar and fixed corner) ── */
-.theme-toggle {
-  background: var(--bg2); border: 1px solid var(--border);
-  border-radius: 999px; padding: 0.28rem 0.65rem 0.28rem 0.5rem;
-  display: flex; align-items: center; gap: 0.4rem;
-  cursor: pointer; transition: border-color 0.2s, background 0.35s;
-  font-family: 'Space Mono', monospace; font-size: 0.58rem;
-  color: var(--text-dim); letter-spacing: 0.06em; outline: none;
-}
-.theme-toggle:hover { border-color: var(--blue-glow); color: var(--text); }
-.theme-toggle svg { width: 11px; height: 11px; flex-shrink: 0; stroke: var(--blue-glow); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-
-/* desktop fixed toggle */
-.theme-toggle-fixed {
-  position: fixed; top: 1.1rem; right: 1.4rem; z-index: 200;
-}
-
-/* ── CONTENT AREA ── */
-.content {
-  margin-left: 240px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-/* ── SECTION BASE ── */
-section {
-  padding: 5rem 4rem;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 100vh;
-}
-section:last-child { border-bottom: none; min-height: auto; }
-
-.slabel {
-  font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow);
-  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.7rem;
-  display: flex; align-items: center; gap: 0.7rem; flex-wrap: nowrap;
-}
-.slabel::after { content: ''; flex: 0 0 60px; height: 1px; background: var(--blue-mid); }
-.stitle { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 300; line-height: 1.1; margin-bottom: 3rem; letter-spacing: -0.01em; }
-
-/* ── HERO — flex row on desktop, column on mobile ── */
-#hero {
-  min-height: 100vh;
-  padding: 5rem 0;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 0;
-  position: relative;
-  overflow: hidden;
-}
-#hero::before {
-  content: ''; position: absolute; top: -200px; left: 15%;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(37,99,196,0.08) 0%, transparent 70%);
-  pointer-events: none;
-}
-
-.hero-col {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0 3rem;
-  min-width: 0;
-}
-.hero-col-mid {
-  border-left: 1px solid var(--border);
-  border-right: 1px solid var(--border);
-  flex: 0 0 260px;
-}
-.hero-col-right { flex: 0 0 240px; }
-
-/* hero text */
-.h-eye  { font-family: 'Space Mono', monospace; font-size: 0.7rem; color: var(--blue-glow); letter-spacing: 0.22em; text-transform: uppercase; margin-bottom: 1rem; opacity:0; animation: fu 0.6s 0.2s forwards; }
-.h-name { font-size: clamp(2rem, 3.2vw, 3.6rem); font-weight: 300; line-height: 1; margin-bottom: 1.1rem; letter-spacing: -0.02em; opacity:0; animation: fu 0.6s 0.4s forwards; }
-.h-name span { color: var(--blue-glow); display: block; font-weight: 500; }
-.h-type { font-family: 'Space Mono', monospace; font-size: clamp(0.7rem, 1.1vw, 0.85rem); color: var(--text-mid); margin-bottom: 1.4rem; min-height: 1.5em; opacity:0; animation: fu 0.6s 0.6s forwards; }
-#ttext  { color: var(--blue-glow); }
-.cur    { display: inline-block; width: 2px; height: 1em; background: var(--blue-glow); margin-left: 2px; vertical-align: middle; animation: blink 1s infinite; }
-.h-bio  { font-size: 0.85rem; line-height: 1.8; color: var(--text-dim); margin-bottom: 2rem; opacity:0; animation: fu 0.6s 0.8s forwards; }
-.h-ctas { display: flex; gap: 0.6rem; flex-wrap: wrap; opacity:0; animation: fu 0.6s 1s forwards; }
-.h-stats { display: flex; gap: 1.5rem; flex-wrap: wrap; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border); opacity:0; animation: fu 0.6s 1.2s forwards; }
-.snum  { font-size: 1.5rem; font-weight: 500; color: var(--blue-glow); font-family: 'Space Mono', monospace; line-height: 1; }
-.slbl2 { font-size: 0.58rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 0.2rem; }
-
-/* hero column labels */
-.col-label {
-  font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow);
-  letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 1rem;
-  display: flex; align-items: center; gap: 0.5rem;
-}
-.col-label::after { content: ''; flex: 0 0 30px; height: 1px; background: var(--blue-mid); }
-
-/* slim cert cards */
-.cc-slim {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 7px; padding: 0.85rem 0.95rem;
-  margin-bottom: 0.55rem; transition: all 0.2s;
-  position: relative; overflow: hidden;
-}
-.cc-slim::before { content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%; background: var(--blue-mid); transition: background 0.2s; }
-.cc-slim:hover { border-color: rgba(59,130,246,0.3); transform: translateX(3px); }
-.cc-slim:hover::before { background: var(--blue-glow); }
-.cc-slim .cbadge  { font-family: 'Space Mono', monospace; font-size: 0.5rem; padding: 0.12rem 0.38rem; border-radius: 3px; background: rgba(37,99,196,0.1); color: var(--blue-glow); border: 1px solid rgba(59,130,246,0.18); display: inline-block; margin-bottom: 0.3rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.cc-slim .cname   { font-size: 0.8rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; line-height: 1.3; }
-.cc-slim .cissuer { font-size: 0.68rem; color: var(--text-dim); }
-.cc-slim .cdate   { font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--text-dim); margin-top: 0.1rem; }
-
-/* ── BUTTONS ── */
-.btn-p { padding: 0.58rem 1.2rem; background: var(--blue-mid); color: #fff; border: 1px solid var(--blue-hi); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
-.btn-p:hover { background: var(--blue-hi); box-shadow: 0 0 18px rgba(37,99,196,0.35); }
-.btn-g { padding: 0.58rem 1.2rem; background: transparent; color: var(--text-mid); border: 1px solid var(--border); border-radius: 6px; font-family: 'Space Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; text-decoration: none; transition: all 0.2s; white-space: nowrap; }
-.btn-g:hover { border-color: var(--blue-mid); color: var(--text); }
-
-/* ── TIMELINE ── */
-.timeline { position: relative; padding-left: 2rem; }
-.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 1px; background: linear-gradient(to bottom, var(--blue-mid), transparent); }
-.ti { position: relative; margin-bottom: 2.5rem; }
-.ti::before { content: ''; position: absolute; left: -2.4rem; top: 0.4rem; width: 8px; height: 8px; border-radius: 50%; background: var(--blue-glow); box-shadow: 0 0 8px rgba(59,130,246,0.45); }
-.ti-date { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); letter-spacing: 0.1em; margin-bottom: 0.28rem; }
-.ti-role { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.1rem; }
-.ti-co   { font-size: 0.8rem; color: var(--text-mid); margin-bottom: 0.5rem; }
-.ti-desc { font-size: 0.8rem; line-height: 1.8; color: var(--text-dim); }
-.rbtn { margin-top: 2.5rem; }
-
-/* ── PROJECTS ── */
-.pgrid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.4rem;
-}
-.pc {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 10px; overflow: hidden;
-  transition: all 0.25s; position: relative;
-  display: flex; flex-direction: column;
-  flex: 1 1 320px; min-width: 0;
-}
-.pc::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); transform: scaleX(0); transform-origin: left; transition: transform 0.3s; }
-.pc:hover { border-color: rgba(59,130,246,0.28); box-shadow: 0 12px 32px rgba(0,0,0,0.12); }
-.pc:hover::after { transform: scaleX(1); }
-
-.pc-img { width: 100%; height: 185px; background: var(--img-bg); border-bottom: 1px solid var(--img-border); overflow: hidden; position: relative; flex-shrink: 0; }
-.pc-img img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s; }
-.pc:hover .pc-img img { transform: scale(1.04); }
-.pc-img-placeholder { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; width: 100%; height: 100%; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--text-dim); letter-spacing: 0.08em; }
-.pc-img-placeholder svg { width: 24px; height: 24px; stroke: var(--blue-glow); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; opacity: 0.4; }
-.pc-img-label { position: absolute; bottom: 0.5rem; right: 0.6rem; font-family: 'Space Mono', monospace; font-size: 0.54rem; color: var(--blue-glow); background: var(--scrim); padding: 0.16rem 0.42rem; border-radius: 3px; letter-spacing: 0.06em; }
-
-.pc-body { padding: 1.5rem; flex: 1; display: flex; flex-direction: column; }
-.pnum  { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-mid); letter-spacing: 0.15em; margin-bottom: 0.5rem; }
-.pname { font-size: 1rem; font-weight: 500; color: var(--text); margin-bottom: 0.5rem; line-height: 1.2; }
-.pdesc { font-size: 0.8rem; line-height: 1.8; color: var(--text-dim); margin-bottom: 0.9rem; flex: 1; }
-.ptags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.9rem; }
-.tag   { font-family: 'Space Mono', monospace; font-size: 0.54rem; padding: 0.18rem 0.48rem; border-radius: 4px; background: rgba(37,99,196,0.08); color: var(--text-mid); border: 1px solid var(--border); letter-spacing: 0.04em; }
-.plink { display: inline-block; font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); text-decoration: none; letter-spacing: 0.05em; border: 1px solid rgba(59,130,246,0.28); padding: 0.3rem 0.65rem; border-radius: 4px; transition: all 0.2s; align-self: flex-start; }
-.plink:hover { background: rgba(37,99,196,0.12); border-color: var(--blue-glow); }
-
-/* ── SKILLS ── */
-.skills-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 3rem;
-}
-.scat-block {
-  flex: 1 1 280px;
-  min-width: 0;
-  margin-bottom: 1.5rem;
-}
-.scat { font-family: 'Space Mono', monospace; font-size: 0.56rem; color: var(--blue-glow); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.8rem; padding-bottom: 0.45rem; border-bottom: 1px solid var(--border); }
-.ski  { margin-bottom: 0.7rem; }
-.skh  { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.38rem; }
-.skn  { font-size: 0.76rem; color: var(--text-mid); }
-.skp  { font-family: 'Space Mono', monospace; font-size: 0.6rem; color: var(--blue-glow); }
-.skbar  { height: 2px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
-.skfill { height: 100%; background: linear-gradient(90deg, var(--blue-mid), var(--blue-glow)); border-radius: 2px; width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
-
-/* ── CONTACT ── */
-#contact { min-height: auto; padding-bottom: 5rem; }
-.contact-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3rem;
-  align-items: flex-start;
-}
-.contact-left { flex: 1 1 280px; }
-.contact-right { flex: 1 1 280px; }
-.clead  { font-size: 0.9rem; line-height: 1.8; color: var(--text-dim); margin-bottom: 1.8rem; }
-.clinks { display: flex; flex-direction: column; gap: 0.55rem; }
-.clink  { display: flex; align-items: center; gap: 0.9rem; padding: 0.8rem 1rem; background: var(--card); border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--text-mid); font-size: 0.8rem; transition: all 0.2s; }
-.clink:hover { border-color: rgba(59,130,246,0.28); color: var(--text); background: rgba(37,99,196,0.06); }
-.cico  { font-family: 'Space Mono', monospace; font-size: 0.58rem; color: var(--blue-glow); width: 54px; flex-shrink: 0; }
-
-/* ── ANIMATIONS ── */
-@keyframes fu    { from { opacity:0; transform: translateY(18px); } to { opacity:1; transform: none; } }
-@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-.reveal { opacity:0; transform: translateY(18px); transition: opacity 0.7s ease, transform 0.7s ease; }
-.reveal.visible { opacity:1; transform: none; }
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar { width: 3px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--blue); border-radius: 2px; }
-
-/* ── RESPONSIVE ── */
-
-/* Tablet: collapse side columns in hero */
-@media (max-width: 1100px) {
-  .sidenav { width: 200px; padding: 2rem 1.2rem; }
-  .content { margin-left: 200px; }
-  .hero-col-mid { flex: 0 0 220px; }
-  .hero-col-right { flex: 0 0 200px; }
-  .hero-col { padding: 0 2rem; }
-}
-
-/* Mobile: hide side nav, show topbar */
-@media (max-width: 768px) {
-  /* topbar visible */
-  .topbar { display: flex; }
-
-  /* sidenav becomes a drawer */
-  .sidenav {
-    width: 240px;
-    transform: translateX(-100%);
-    top: 56px; /* below topbar */
-    height: calc(100vh - 56px);
-    box-shadow: 4px 0 24px rgba(0,0,0,0.3);
-  }
-  .sidenav.open { transform: translateX(0); }
-  .nav-overlay { display: block; pointer-events: none; }
-  .nav-overlay.open { pointer-events: auto; }
-
-  /* hide desktop theme toggle */
-  .theme-toggle-fixed { display: none; }
-
-  /* content full width */
-  .content { margin-left: 0; padding-top: 56px; }
-
-  /* sections */
-  section { padding: 3.5rem 1.5rem; min-height: auto; }
-  #hero { padding: 3rem 1.5rem; min-height: auto; }
-
-  /* hero stacks vertically */
-  #hero { flex-direction: column; }
-  .hero-col { padding: 0; flex: none; }
-  .hero-col-mid {
-    border-left: none; border-right: none;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-    padding: 2rem 0; flex: none;
-  }
-  .hero-col-right { padding: 0; flex: none; }
-
-  /* cert cols stack side by side on mobile if room */
-  .hero-creds { display: flex; flex-wrap: wrap; gap: 1.5rem; }
-  .hero-col-mid, .hero-col-right { flex: 1 1 260px; border: none; padding: 0; }
-
-  /* projects single col */
-  .pc { flex: 1 1 100%; }
-
-  /* contact wrap */
-  .contact-wrap { gap: 2rem; }
-  .contact-left, .contact-right { flex: 1 1 100%; }
-
-  /* skills full width */
-  .scat-block { flex: 1 1 100%; }
-}
-
-@media (max-width: 480px) {
-  section { padding: 3rem 1.2rem; }
-  #hero { padding: 2.5rem 1.2rem; }
-  .h-ctas { flex-direction: column; }
-  .btn-p, .btn-g { text-align: center; }
-}
-</style>
-</head>
-<body>
-
-<!-- MOBILE TOPBAR -->
-<header class="topbar">
-  <span class="topbar-name">// scamover9</span>
-  <div class="topbar-right">
-    <button class="theme-toggle" id="themeToggleMobile" aria-label="Toggle theme">
-      <svg id="themeIconMobile" viewBox="0 0 24 24"><path id="themeIconPathMobile" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
-      <span id="themeLabelMobile">Light</span>
-    </button>
-    <button class="hamburger" id="hamburger" aria-label="Open menu">
-      <span></span><span></span><span></span>
-    </button>
-  </div>
-</header>
-
-<!-- NAV OVERLAY -->
-<div class="nav-overlay" id="navOverlay"></div>
-
-<!-- PAGE SHELL -->
-<div class="page-shell">
-
-  <!-- SIDE NAV -->
-  <nav class="sidenav" id="sidenav">
-    <div class="nav-logo">// portfolio</div>
-    <div class="nav-name">Sammy Campos Rivera</div>
-    <div class="nav-sub">Cybersecurity &amp; Cloud</div>
-    <div class="nav-links">
-      <a href="#hero"       class="active"><span class="ni">01</span> Home</a>
-      <a href="#experience">               <span class="ni">02</span> Experience</a>
-      <a href="#projects">                 <span class="ni">03</span> Projects</a>
-      <a href="#skills">                   <span class="ni">04</span> Skills</a>
-      <a href="#contact">                  <span class="ni">05</span> Contact</a>
-    </div>
-    <div class="nav-bottom">
-      <a href="https://linkedin.com/in/scamover9"  target="_blank" rel="noopener">LinkedIn</a>
-      <a href="https://github.com/labscamover9"    target="_blank" rel="noopener">GitHub</a>
-      <a href="https://labscamover9.com"           target="_blank" rel="noopener">Homelab ↗</a>
-    </div>
-  </nav>
-
-  <!-- CONTENT -->
-  <div class="content">
-
-    <!-- HERO -->
-    <section id="hero">
-
-      <!-- Left: intro -->
-      <div class="hero-col">
-        <div class="h-eye">Available for opportunities · DFW Area</div>
-        <h1 class="h-name">Sammy<span>Campos Rivera</span></h1>
-        <div class="h-type"><span id="ttext"></span><span class="cur"></span></div>
-        <p class="h-bio">Cybersecurity student and CompTIA A+ certified technician based in the Dallas–Fort Worth area. I build and maintain self-hosted infrastructure, pursue security certifications, and bring hands-on experience from IT support, broadcast production, and systems administration.</p>
-        <div class="h-ctas">
-          <a href="#projects" class="btn-p">View Projects</a>
-          <a href="resume.pdf" download class="btn-g">Resume</a>
-          <a href="https://labscamover9.com" target="_blank" rel="noopener" class="btn-g">Homelab ↗</a>
-        </div>
-        <div class="h-stats">
-          <div><div class="snum">A+</div><div class="slbl2">CompTIA Certified</div></div>
-          <div><div class="snum">3</div><div class="slbl2">Proxmox Nodes</div></div>
-          <div><div class="snum">5+</div><div class="slbl2">Years in Tech</div></div>
-          <div><div class="snum">S+</div><div class="slbl2">Next Cert</div></div>
-        </div>
-      </div>
-
-      <!-- Middle: education -->
-      <div class="hero-col hero-col-mid">
-        <div class="col-label">Education</div>
-        <div class="cc-slim">
-          <div class="cbadge">2024</div>
-          <div class="cname">Cloud Computing</div>
-          <div class="cissuer">Dallas College</div>
-          <div class="cdate">August 2024</div>
-        </div>
-        <div class="cc-slim">
-          <div class="cbadge">Certificate · 2024</div>
-          <div class="cname">Cybersecurity — Level 1</div>
-          <div class="cissuer">Texas State Technical College</div>
-          <div class="cdate">Aug 2022 — Mar 2024</div>
-        </div>
-        <div class="cc-slim">
-          <div class="cbadge">Diploma · 2024</div>
-          <div class="cname">High School Diploma</div>
-          <div class="cissuer">Ferris High School</div>
-          <div class="cdate">Aug 2020 — May 2024</div>
-        </div>
-      </div>
-
-      <!-- Right: certifications -->
-      <div class="hero-col hero-col-right">
-        <div class="col-label">Certifications</div>
-        <div class="cc-slim">
-          <div class="cbadge">Active · Expires Feb 2029</div>
-          <div class="cname">CompTIA A+</div>
-          <div class="cissuer">CompTIA — Plus Series</div>
-          <div class="cdate">Issued Feb 18, 2026</div>
-        </div>
-        <div class="cc-slim">
-          <div class="cbadge">In Progress</div>
-          <div class="cname">CompTIA Security+</div>
-          <div class="cissuer">CompTIA</div>
-          <div class="cdate">Target 2026</div>
-        </div>
-        <div class="cc-slim">
-          <div class="cbadge">Certification</div>
-          <div class="cname">MOS: Associate</div>
-          <div class="cissuer">Microsoft — Office 365 &amp; 2019</div>
-          <div class="cdate">Verified</div>
-        </div>
-        <div class="cc-slim">
-          <div class="cbadge">Certification</div>
-          <div class="cname">Project Management Foundations</div>
-          <div class="cissuer">Google / Coursera</div>
-          <div class="cdate">Completed · 4 courses</div>
-        </div>
-      </div>
-
-    </section>
-
-    <!-- EXPERIENCE -->
-    <section id="experience">
-      <div class="slabel">02 — Work History</div>
-      <h2 class="stitle">Experience</h2>
-      <div class="timeline reveal">
-        <div class="ti">
-          <div class="ti-date">Nov 2025 — Present</div>
-          <div class="ti-role">Substitute Teacher</div>
-          <div class="ti-co">Ferris High School · Ferris, TX</div>
-          <div class="ti-desc">Supporting classroom instruction while continuing to pursue cybersecurity and cloud computing certifications full time.</div>
-        </div>
-        <div class="ti">
-          <div class="ti-date">May 2024 — Aug 2025</div>
-          <div class="ti-role">Help Desk Technician</div>
-          <div class="ti-co">Luis's Mexican Food &amp; Grill · Garland, TX</div>
-          <div class="ti-desc">Sole IT resource for all technical operations — managed POS terminals, network access points, computers, televisions, and landline phones. Resolved hardware and software issues independently with no escalation path.</div>
-        </div>
-        <div class="ti">
-          <div class="ti-date">Aug 2022 — Apr 2024</div>
-          <div class="ti-role">Computer Equipment Manager</div>
-          <div class="ti-co">Bricktown Gaming @ Ferris High School · Ferris, TX</div>
-          <div class="ti-desc">Provided technical support, resolved user issues, and performed routine equipment maintenance to ensure optimal system performance and longevity.</div>
-        </div>
-        <div class="ti">
-          <div class="ti-date">Aug 2020 — Apr 2024</div>
-          <div class="ti-role">IT Support / Team Lead</div>
-          <div class="ti-co">Bugeyemedia @ Ferris High School · Ferris, TX</div>
-          <div class="ti-desc">Led a 16-person cross-departmental team producing live sports broadcasts and pre-recorded content with 5–7 on-air anchors. Responsible for installation, management, and real-time troubleshooting of all AV, camera, and computer equipment.</div>
-        </div>
-      </div>
-      <div class="rbtn reveal">
-        <a href="resume.pdf" download class="btn-p">Download Full Resume (PDF)</a>
-      </div>
-    </section>
-
-    <!-- PROJECTS -->
-    <section id="projects">
-      <div class="slabel">03 — Built Things</div>
-      <h2 class="stitle">Projects</h2>
-      <div class="pgrid reveal">
-
-        <div class="pc">
-          <div class="pc-img">
-            <img src="proxmox.png" alt="Proxmox cluster dashboard"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-            <div class="pc-img-placeholder" style="display:none">
-              <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-              proxmox.png
-            </div>
-            <div class="pc-img-label">proxmox.png</div>
-          </div>
-          <div class="pc-body">
-            <div class="pnum">// 01</div>
-            <div class="pname">Self-Hosted Homelab</div>
-            <div class="pdesc">Designed and maintain a production-grade homelab running a 3-node Proxmox cluster with TrueNAS RAIDZ1 storage, containerized services via Docker, and a full monitoring stack. Layered security using Cloudflare WAF, Tailscale, and WireGuard VPN. Hosts 10+ self-managed services including media, photo management, documentation, and home automation.</div>
-            <div class="ptags">
-              <span class="tag">Proxmox</span><span class="tag">TrueNAS</span><span class="tag">Docker</span>
-              <span class="tag">Tailscale</span><span class="tag">Cloudflare</span><span class="tag">Linux</span>
-            </div>
-            <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
-          </div>
-        </div>
-
-        <div class="pc">
-          <div class="pc-img">
-            <img src="grafana.png" alt="Grafana monitoring dashboard"
-                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
-            <div class="pc-img-placeholder" style="display:none">
-              <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-              grafana.png
-            </div>
-            <div class="pc-img-label">grafana.png</div>
-          </div>
-          <div class="pc-body">
-            <div class="pnum">// 02</div>
-            <div class="pname">Infrastructure Monitoring Stack</div>
-            <div class="pdesc">Built a full observability stack using Prometheus for metrics scraping across all Proxmox nodes and VMs, feeding into Grafana for real-time visualization of CPU, memory, disk, and network traffic. Configured uptime tracking with Uptime Kuma and alerting across all hosted services.</div>
-            <div class="ptags">
-              <span class="tag">Grafana</span><span class="tag">Prometheus</span>
-              <span class="tag">Uptime Kuma</span><span class="tag">Node Exporter</span>
-            </div>
-            <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">Visit Homelab ↗</a>
-          </div>
-        </div>
-
-        <div class="pc">
-          <div class="pc-body" style="padding-top:1.6rem">
-            <div class="pnum">// 03</div>
-            <div class="pname">Bugeyemedia Broadcast Infrastructure</div>
-            <div class="pdesc">Built and managed full AV and IT infrastructure for live high school sports broadcasts. Led a 16-person team producing live shows with 5–7 on-air anchors, video editing pipelines, and pre-recorded content across a 4-year run.</div>
-            <div class="ptags">
-              <span class="tag">AV Systems</span><span class="tag">Team Lead</span>
-              <span class="tag">Live Broadcast</span><span class="tag">Video Editing</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="pc">
-          <div class="pc-body" style="padding-top:1.6rem">
-            <div class="pnum">// 04</div>
-            <div class="pname">Portfolio &amp; Resume Website</div>
-            <div class="pdesc">Designed and built this portfolio hosted on GitHub Pages. Features a light/dark theme toggle, animated typing hero, scroll-triggered animations, hamburger mobile nav, and downloadable PDF resume. Built with vanilla HTML, CSS, and JavaScript — no frameworks, no dependencies.</div>
-            <div class="ptags">
-              <span class="tag">HTML/CSS</span><span class="tag">JavaScript</span>
-              <span class="tag">GitHub Pages</span><span class="tag">Responsive</span>
-            </div>
-            <a href="https://labscamover9.com" target="_blank" rel="noopener" class="plink">labscamover9.com ↗</a>
-          </div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- SKILLS -->
-    <section id="skills">
-      <div class="slabel">04 — Capabilities</div>
-      <h2 class="stitle">Skills</h2>
-      <div class="skills-wrap reveal">
-
-        <div class="scat-block">
-          <div class="scat">Infrastructure &amp; Virtualization</div>
-          <div class="ski"><div class="skh"><span class="skn">Proxmox VE</span><span class="skp">85%</span></div><div class="skbar"><div class="skfill" data-w="85"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">TrueNAS / Storage</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">Docker / Containers</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">Linux (Debian / RHEL)</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
-        </div>
-
-        <div class="scat-block">
-          <div class="scat">Networking &amp; Security</div>
-          <div class="ski"><div class="skh"><span class="skn">Networking &amp; DNS</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">Cloudflare / WAF</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">WireGuard / Tailscale</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">Cybersecurity Fundamentals</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
-        </div>
-
-        <div class="scat-block">
-          <div class="scat">Monitoring &amp; Web</div>
-          <div class="ski"><div class="skh"><span class="skn">Grafana / Prometheus</span><span class="skp">70%</span></div><div class="skbar"><div class="skfill" data-w="70"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">HTML / CSS / JavaScript</span><span class="skp">75%</span></div><div class="skbar"><div class="skfill" data-w="75"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">IT Hardware Support</span><span class="skp">90%</span></div><div class="skbar"><div class="skfill" data-w="90"></div></div></div>
-          <div class="ski"><div class="skh"><span class="skn">System Configuration</span><span class="skp">80%</span></div><div class="skbar"><div class="skfill" data-w="80"></div></div></div>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- CONTACT -->
-    <section id="contact">
-      <div class="slabel">05 — Get In Touch</div>
-      <h2 class="stitle">Contact</h2>
-      <div class="contact-wrap reveal">
-        <div class="contact-left">
-          <p class="clead">Currently open to IT, cybersecurity, and systems administration opportunities in the DFW area. Whether you have a role, a question, or just want to talk tech — reach out.</p>
-          <a href="/cdn-cgi/l/email-protection#136070727e637c60617a65766172537a707f7c66773d707c7e" class="btn-p">Send an Email</a>
-        </div>
-        <div class="contact-right">
-          <div class="clinks">
-            <a href="/cdn-cgi/l/email-protection#3e4d5d5f534e514d4c57485b4c5f7e575d52514b5a105d5153" class="clink"><span class="cico">EMAIL</span><span class="__cf_email__" data-cfemail="ccbfafada1bca3bfbea5baa9bead8ca5afa0a3b9a8e2afa3a1">[email&#160;protected]</span></a>
-            <a href="https://linkedin.com/in/scamover9" target="_blank" rel="noopener" class="clink"><span class="cico">LINKEDIN</span>linkedin.com/in/scamover9</a>
-            <a href="https://labscamover9.com" target="_blank" rel="noopener" class="clink"><span class="cico">HOMELAB</span>labscamover9.com</a>
-            <a href="tel:4693169307" class="clink"><span class="cico">PHONE</span>(469) 316-9307</a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-  </div><!-- end .content -->
-</div><!-- end .page-shell -->
-
-<!-- DESKTOP THEME TOGGLE -->
-<button class="theme-toggle theme-toggle-fixed" id="themeToggleDesktop" aria-label="Toggle theme">
-  <svg id="themeIconDesktop" viewBox="0 0 24 24"><path id="themeIconPathDesktop" d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z"/></svg>
-  <span id="themeLabelDesktop">Light</span>
-</button>
-
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-// ── THEME ──
-const html = document.documentElement;
-const MOON = 'M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79z';
-const SUN  = 'M12 2v2M12 20v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M2 12h2M20 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42M15.54 8.46a6 6 0 1 1-7.07 7.07';
-
-function applyTheme(t) {
-  html.dataset.theme = t;
-  localStorage.setItem('theme', t);
-  ['Desktop','Mobile'].forEach(id => {
-    const path  = document.getElementById('themeIconPath'  + id);
-    const label = document.getElementById('themeLabel'     + id);
-    const svg   = document.getElementById('themeIcon'      + id);
-    if (!path) return;
-    path.setAttribute('d', t === 'dark' ? MOON : SUN);
-    label.textContent = t === 'dark' ? 'Light' : 'Dark';
-    if (t === 'dark') { svg.style.fill = 'var(--blue-glow)'; svg.style.stroke = 'none'; }
-    else              { svg.style.fill = 'none'; svg.style.stroke = 'var(--blue-glow)'; }
-  });
-}
-applyTheme(localStorage.getItem('theme') || 'dark');
-document.getElementById('themeToggleDesktop').addEventListener('click', () => applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-document.getElementById('themeToggleMobile').addEventListener('click',  () => applyTheme(html.dataset.theme === 'dark' ? 'light' : 'dark'));
-
-// ── HAMBURGER / DRAWER ──
-const burger  = document.getElementById('hamburger');
-const sidenav = document.getElementById('sidenav');
-const overlay = document.getElementById('navOverlay');
-
-function toggleNav(open) {
-  sidenav.classList.toggle('open', open);
-  overlay.classList.toggle('open', open);
-  burger.classList.toggle('open', open);
-  document.body.style.overflow = open ? 'hidden' : '';
-}
-burger.addEventListener('click', () => toggleNav(!sidenav.classList.contains('open')));
-overlay.addEventListener('click', () => toggleNav(false));
-
-// close drawer on nav link click (mobile)
-document.querySelectorAll('.nav-links a').forEach(a => {
-  a.addEventListener('click', () => { if (window.innerWidth <= 768) toggleNav(false); });
-});
-
-// ── TYPED ──
-const roles = ['CompTIA A+ Certified','Cybersecurity Student','Homelab Engineer','Linux Sysadmin','Security+ In Progress'];
-let ri=0, ci=0, del=false;
-const el = document.getElementById('ttext');
-function type() {
-  const w = roles[ri];
-  if (!del) { el.textContent = w.slice(0,++ci); if(ci===w.length){del=true;setTimeout(type,1800);return;} }
-  else      { el.textContent = w.slice(0,--ci); if(ci===0){del=false;ri=(ri+1)%roles.length;} }
-  setTimeout(type, del?45:80);
-}
-type();
-
-// ── SCROLL REVEAL + SKILL BARS ──
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      e.target.querySelectorAll('.skfill').forEach(b => b.style.width = b.dataset.w + '%');
-    }
-  });
-}, { threshold: 0.1 });
-document.querySelectorAll('.reveal').forEach(r => obs.observe(r));
-
-// ── ACTIVE NAV ──
-const secs = document.querySelectorAll('section[id]');
-const nls  = document.querySelectorAll('.nav-links a');
-secs.forEach(s => new IntersectionObserver(entries => {
- 
